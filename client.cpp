@@ -5,7 +5,7 @@
 
 #include "client.h"
 
-Client::Client(uint32_t ip, uint16_t port, const QString& username)
+Client::Client(in_addr_t ip, uint16_t port, const QString& username)
 {
     sockaddr_in serverAddress;
 

@@ -34,22 +34,25 @@ void MainWindow::slot_start() {
 
 void MainWindow::slot_connect() {
     bool validNum;
-    uint32_t ip;
+    in_addr_t ip;
     uint16_t port;
     Client* client;
 
     // disable the server tab item
     ui->tabWidget->setTabEnabled(1, false);
 
-    ip = ui->serverIPLineEdit->text().toUInt(&validNum);
-    port = ui->portLineEdit->text().toUInt(&validNum);
-
-    if (!validNum) {
-        qDebug() << "Bad number";
+    if ((ip = inet_addr(ui->serverIPLineEdit->text().toAscii())) == INADDR_NONE) {
+        qDebug() << "Bad IP address";
         return;
     }
 
-    client = new Client(htonl(ip), htons(port), ui->usernameLineEdit->text());
+    port = ui->portLineEdit->text().toUInt(&validNum);
+    if (!validNum) {
+        qDebug() << "Bad port number";
+        return;
+    }
+
+    client = new Client(ip, htons(port), ui->usernameLineEdit->text());
 
     ui->connectPushButton->setText(tr("Disconnect"));
 }
