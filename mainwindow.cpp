@@ -28,4 +28,6 @@ void MainWindow::slot_connect() {
     uint32_t ip = htonl(ui->serverIPLineEdit->text().toUInt());
     uint16_t port = htons(ui->portLineEdit->text().toUInt());
     Client client = Client(ip, port, ui->usernameLineEdit->text());
+
+    ui->connectPushButton->setText(tr("Disconnect"));
 }
