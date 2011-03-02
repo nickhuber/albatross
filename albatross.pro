@@ -13,6 +13,10 @@ macx {
     ICON = albatross.icns
 }
 
+winnt {
+    RC_FILE = myapp.rc
+}
+
 SOURCES += main.cpp\
     mainwindow.cpp \
     server.cpp \
