@@ -1,9 +1,10 @@
 #include <arpa/inet.h>
 #include <QDebug>
-#include "client.h"
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "server.h"
+#include "client.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -35,6 +36,7 @@ void MainWindow::slot_connect() {
     bool validNum;
     uint32_t ip;
     uint16_t port;
+    Client* client;
 
     // disable the server tab item
     ui->tabWidget->setTabEnabled(1, false);
@@ -47,7 +49,7 @@ void MainWindow::slot_connect() {
         return;
     }
 
-    Client client = Client(ip, port, ui->usernameLineEdit->text());
+    client = new Client(ip, port, ui->usernameLineEdit->text());
 
     ui->connectPushButton->setText(tr("Disconnect"));
 }
