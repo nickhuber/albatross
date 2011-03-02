@@ -33,13 +33,20 @@ void MainWindow::slot_start() {
 
 void MainWindow::slot_connect() {
     bool validNum;
+    uint32_t ip;
+    uint16_t port;
+
+    // disable the server tab item
     ui->tabWidget->setTabEnabled(1, false);
-    uint32_t ip = htonl(ui->serverIPLineEdit->text().toUInt(&validNum));
-    uint16_t port = htons(ui->portLineEdit->text().toUInt(&validNum));
+
+    ip = htonl(ui->serverIPLineEdit->text().toUInt(&validNum));
+    port = htons(ui->portLineEdit->text().toUInt(&validNum));
+
     if (!validNum) {
         qDebug() << "Bad number";
         return;
     }
+
     Client client = Client(ip, port, ui->usernameLineEdit->text());
 
     ui->connectPushButton->setText(tr("Disconnect"));
