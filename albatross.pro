@@ -9,9 +9,12 @@ QT       += core gui
 TARGET = albatross
 TEMPLATE = app
 
+macx {
+    ICON = albatross.icns
+}
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
+    mainwindow.cpp \
     server.cpp \
     client.cpp \
     connection.cpp
