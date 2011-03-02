@@ -11,8 +11,15 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    server.cpp \
+    client.cpp \
+    connection.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    server.h \
+    client.h \
+    connection.h \
+    chatmsg.h
 
 FORMS    += mainwindow.ui
