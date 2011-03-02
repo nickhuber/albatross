@@ -20,6 +20,7 @@ private:
 
 public slots:
     void slot_start();
+    void slot_connect();
 };
 
 #endif // MAINWINDOW_H
