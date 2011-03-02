@@ -10,7 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
+    setWindowIcon(QIcon(":/albatross.png"));
     connect(ui->startPushButton, SIGNAL(clicked()), SLOT(slot_start()));
     connect(ui->connectPushButton, SIGNAL(clicked()), SLOT(slot_connect()));
 }

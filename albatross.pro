@@ -30,3 +30,6 @@ HEADERS  += mainwindow.h \
     chatmsg.h
 
 FORMS    += mainwindow.ui
+
+RESOURCES += \
+    icon.qrc
