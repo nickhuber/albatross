@@ -5,7 +5,7 @@
   Structure about each message going across the alabtross protocol.
   @author Nick Huber
   */
-struct ChatMsg{
+struct ChatMsgi {
     size_t msgSize; /**< The size of this message. */
     MsgType msgType;/**< The type of this message. */
     char* userName; /**< Name of user who sent this message. */
