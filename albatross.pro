@@ -14,7 +14,7 @@ macx {
 }
 
 winnt {
-    RC_FILE = myapp.rc
+    RC_FILE = albatross.rc
 }
 
 SOURCES += main.cpp\
