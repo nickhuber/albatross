@@ -1,5 +1,12 @@
 #ifndef CHATMSG_H
 #define CHATMSG_H
+/**
+  @file
+  The ChatMsg structure, and the associated MsgType Enum
+
+  msgType:
+  CHAT - This message is designed to be sent to all members in the chat.
+  */
 
 /**
   Structure about each message going across the alabtross protocol.
