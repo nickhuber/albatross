@@ -41,15 +41,15 @@ void MainWindow::slot_connect() {
     // disable the server tab item
     ui->tabWidget->setTabEnabled(1, false);
 
-    ip = htonl(ui->serverIPLineEdit->text().toUInt(&validNum));
-    port = htons(ui->portLineEdit->text().toUInt(&validNum));
+    ip = ui->serverIPLineEdit->text().toUInt(&validNum);
+    port = ui->portLineEdit->text().toUInt(&validNum);
 
     if (!validNum) {
         qDebug() << "Bad number";
         return;
     }
 
-    client = new Client(ip, port, ui->usernameLineEdit->text());
+    client = new Client(htonl(ip), htons(port), ui->usernameLineEdit->text());
 
     ui->connectPushButton->setText(tr("Disconnect"));
 }
