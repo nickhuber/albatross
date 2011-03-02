@@ -7,6 +7,7 @@ tags
 .DS_Store
 *.swp
 *.o
+*.pro.user
 moc_*.cpp
 Makefile*
 /doc
@@ -20,3 +21,5 @@ Makefile*
 /td.xcodeproj
 /html
 /latex
+albatross
+ui_*
