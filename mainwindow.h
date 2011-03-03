@@ -26,9 +26,32 @@ private:
     void setClientGuiVisible(bool visible);
 
 public slots:
+    /**
+      Slot for when the start button is clicked on the server tab.
+
+      @author Dean Morin
+      */
     void slot_start();
+
+    /**
+      Slot for when the stop button is clicked on the server tab.
+
+      @author Dean Morin
+      */
     void slot_stop();
+
+    /**
+      Slot for when the connect button is clicked on the client tab.
+
+      @author Nick Huber
+      */
     void slot_connect();
+
+    /**
+      Slot for when the disconnect button is clicked on the client tab.
+
+      @author Nick Huber
+      */
     void slot_disconnect();
 };
 
