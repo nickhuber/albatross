@@ -27,6 +27,7 @@ private:
 
 public slots:
     void slot_start();
+    void slot_stop();
     void slot_connect();
     void slot_disconnect();
 };

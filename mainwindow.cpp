@@ -33,6 +33,15 @@ void MainWindow::slot_start() {
     server = new Server(htons(port));
     ui->startPushButton->setText("Stop");
     ui->tabWidget->setTabEnabled(0, false);
+    ui->startPushButton->disconnect();
+    connect(ui->startPushButton, SIGNAL(clicked()), SLOT(slot_stop()));
+}
+
+void MainWindow::slot_stop() {
+    ui->startPushButton->setText("Start");
+    ui->tabWidget->setTabEnabled(0, true);
+    ui->startPushButton->disconnect();
+    connect(ui->startPushButton, SIGNAL(clicked()), SLOT(slot_start()));
 }
 
 void MainWindow::slot_connect() {
@@ -54,14 +63,12 @@ void MainWindow::slot_connect() {
 
     //client = new Client(ip, htons(port), ui->usernameLineEdit->text());
 
-    // disable the server tab item
-    ui->tabWidget->setTabEnabled(1, false);
-
     qDebug() << "connect";
 
     setClientGuiVisible(false);
 
     ui->connectPushButton->setText(tr("Disconnect"));
+    ui->tabWidget->setTabEnabled(1, false);
     ui->connectPushButton->disconnect();
     connect(ui->connectPushButton, SIGNAL(clicked()), SLOT(slot_disconnect()));
 }
@@ -71,8 +78,8 @@ void MainWindow::slot_disconnect() {
 
     setClientGuiVisible(true);
 
-    ui->tabWidget->setTabEnabled(1, true);
     ui->connectPushButton->setText(tr("Connect"));
+    ui->tabWidget->setTabEnabled(1, true);
     ui->connectPushButton->disconnect();
     connect(ui->connectPushButton, SIGNAL(clicked()), SLOT(slot_connect()));
 }
