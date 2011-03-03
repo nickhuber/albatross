@@ -11,7 +11,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    setClientGuiVisible(true);
+
     setWindowIcon(QIcon(":/albatross.png"));
+    setWindowTitle(tr("Albatross"));
     connect(ui->startPushButton, SIGNAL(clicked()), SLOT(slot_start()));
     connect(ui->connectPushButton, SIGNAL(clicked()), SLOT(slot_connect()));
 }
@@ -38,9 +41,6 @@ void MainWindow::slot_connect() {
     uint16_t port;
     Client* client;
 
-    // disable the server tab item
-    ui->tabWidget->setTabEnabled(1, false);
-
     if ((ip = inet_addr(ui->serverIPLineEdit->text().toAscii())) == INADDR_NONE) {
         qDebug() << "Bad IP address";
         return;
@@ -52,7 +52,41 @@ void MainWindow::slot_connect() {
         return;
     }
 
-    client = new Client(ip, htons(port), ui->usernameLineEdit->text());
+    //client = new Client(ip, htons(port), ui->usernameLineEdit->text());
+
+    // disable the server tab item
+    ui->tabWidget->setTabEnabled(1, false);
+
+    qDebug() << "connect";
+
+    setClientGuiVisible(false);
 
     ui->connectPushButton->setText(tr("Disconnect"));
+    ui->connectPushButton->disconnect();
+    connect(ui->connectPushButton, SIGNAL(clicked()), SLOT(slot_disconnect()));
+}
+
+void MainWindow::slot_disconnect() {
+    qDebug() << "disconnect";
+
+    setClientGuiVisible(true);
+
+    ui->tabWidget->setTabEnabled(1, true);
+    ui->connectPushButton->setText(tr("Connect"));
+    ui->connectPushButton->disconnect();
+    connect(ui->connectPushButton, SIGNAL(clicked()), SLOT(slot_connect()));
+}
+
+void MainWindow::setClientGuiVisible(bool visible) {
+    ui->saveSessionLabel->setVisible(visible);
+    ui->saveSessionCheckBox->setVisible(visible);
+    ui->serverIPLabel->setVisible(visible);
+    ui->serverIPLineEdit->setVisible(visible);
+    ui->portLabel->setVisible(visible);
+    ui->portLineEdit->setVisible(visible);
+    ui->usernameLineEdit->setEnabled(visible);
+
+    ui->receivedMsgScrollArea->setVisible(!visible);
+    ui->sendLineEdit->setVisible(!visible);
+    ui->sendPushButton->setVisible(!visible);
 }

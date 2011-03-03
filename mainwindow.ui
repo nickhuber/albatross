@@ -64,9 +64,9 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>10</y>
+        <y>0</y>
         <width>291</width>
-        <height>481</height>
+        <height>491</height>
        </rect>
       </property>
       <layout class="QFormLayout" name="formLayout">
@@ -114,11 +114,11 @@
         <widget class="QLineEdit" name="usernameLineEdit"/>
        </item>
        <item row="5" column="0" colspan="2">
-        <widget class="QScrollArea" name="scrollArea">
+        <widget class="QScrollArea" name="receivedMsgScrollArea">
          <property name="widgetResizable">
           <bool>true</bool>
          </property>
-         <widget class="QWidget" name="scrollAreaWidgetContents">
+         <widget class="QWidget" name="receivedMsgContents">
           <property name="geometry">
            <rect>
             <x>0</x>

@@ -17,10 +17,18 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    /**
+      Hides or shows the client GUI components.
+
+      @param visible whether or not to show the client GUI stuff.
+      @author Nick Huber
+      */
+    void setClientGuiVisible(bool visible);
 
 public slots:
     void slot_start();
     void slot_connect();
+    void slot_disconnect();
 };
 
 #endif // MAINWINDOW_H
