@@ -27,7 +27,6 @@ MainWindow::~MainWindow()
 void MainWindow::slot_start() {
     bool validNum;
     uint port;
-    Server* server;
 
     port = ui->portServerLineEdit->text().toUInt(&validNum);    // TODO: check to see if it fails
     server = new Server(htons(port));
@@ -38,6 +37,7 @@ void MainWindow::slot_start() {
 }
 
 void MainWindow::slot_stop() {
+    delete server;
     ui->startPushButton->setText("Start");
     ui->tabWidget->setTabEnabled(0, true);
     ui->startPushButton->disconnect();
@@ -48,7 +48,6 @@ void MainWindow::slot_connect() {
     bool validNum;
     in_addr_t ip;
     uint16_t port;
-    Client* client;
 
     if ((ip = inet_addr(ui->serverIPLineEdit->text().toAscii())) == INADDR_NONE) {
         qDebug() << "Bad IP address";
@@ -61,9 +60,7 @@ void MainWindow::slot_connect() {
         return;
     }
 
-    //client = new Client(ip, htons(port), ui->usernameLineEdit->text());
-
-    qDebug() << "connect";
+    client = new Client(ip, htons(port), ui->usernameLineEdit->text());
 
     setClientGuiVisible(false);
 
@@ -74,7 +71,7 @@ void MainWindow::slot_connect() {
 }
 
 void MainWindow::slot_disconnect() {
-    qDebug() << "disconnect";
+    delete client;
 
     setClientGuiVisible(true);
 

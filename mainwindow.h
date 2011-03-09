@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "client.h"
+#include "server.h"
 
 namespace Ui {
     class MainWindow;
@@ -17,6 +19,8 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    Client* client;
+    Server* server;
     /**
       Hides or shows the client GUI components.
 
