@@ -2,8 +2,9 @@
 #define SERVER_H
 
 #include <stdint.h>
+#include <QThread>
 
-class Server {
+class Server : public QThread {
 
 private:
     int socket_;
@@ -11,12 +12,14 @@ private:
     int backlog_;
 
 public:
-    Server(uint16_t port);
+    explicit Server(uint16_t port);
     ~Server();
+
+protected:
+    void run();
 
 private:
     void startServer();
-    void serving();
 };
 
 #endif // SERVER_H
