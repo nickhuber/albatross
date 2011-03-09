@@ -1,6 +1,6 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
-
+#include <stdint.h>
 #include <QDebug>
 
 #include "client.h"
@@ -17,8 +17,8 @@ Client::Client(in_addr_t ip, uint16_t port, const QString& username)
     serverAddress.sin_addr.s_addr = ip;
     serverAddress.sin_port = port;
 
-    if (bind(socket_, (sockaddr*) &serverAddress, sizeof(serverAddress)) == -1) {
-        qDebug() << "error binding socket";
+    if (connect(socket_, (sockaddr*) &serverAddress, sizeof(serverAddress)) == -1) {
+        qDebug() << "error conencting to server";
     }
 
 }
