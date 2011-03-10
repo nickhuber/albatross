@@ -24,6 +24,8 @@ public:
       @author Nick Huber
       */
     ~Client();
+
+    void sendMsg(const QString& msg);
 private:
     int socket_;
 };

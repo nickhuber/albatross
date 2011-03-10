@@ -15,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     setWindowTitle(tr("Albatross"));
     connect(ui->startPushButton, SIGNAL(clicked()), SLOT(slot_start()));
     connect(ui->connectPushButton, SIGNAL(clicked()), SLOT(slot_connect()));
+    connect(ui->sendPushButton, SIGNAL(clicked()), SLOT(slot_send()));
 }
 
 MainWindow::~MainWindow() {
@@ -95,6 +96,10 @@ void MainWindow::slot_disconnect() {
     ui->tabWidget->setTabEnabled(1, true);
     ui->connectPushButton->disconnect();
     connect(ui->connectPushButton, SIGNAL(clicked()), SLOT(slot_connect()));
+}
+
+void MainWindow::slot_send() {
+    client_->sendMsg(ui->sendLineEdit->text());
 }
 
 void MainWindow::setClientGuiVisible(bool visible) {

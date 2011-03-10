@@ -58,7 +58,6 @@ void Server::run() {
     int new_sd, sockfd, maxfd, client[FD_SETSIZE];
     socklen_t client_len;
     struct sockaddr_in client_addr;
-    //char *bp, buf[1];
     ssize_t n;
     fd_set rset, allset;
 
@@ -116,56 +115,73 @@ void Server::run() {
             }
 
             if (FD_ISSET(sockfd, &rset)) {
-                bytes_to_read = sizeof(size_t);
+                ChatMsg chatMsg;
+                bytes_to_read = sizeof(chatMsg.size);
                 char* buffer = new char[bytes_to_read];
                 char* buffer_head = buffer;
 
-                while ((n = read(sockfd, buffer, bytes_to_read)) > 0) {
-                    buffer += n;
-                }
-
-                ChatMsg msg;
-                msg.msgSize = (size_t) *buffer_head;
-
-                delete[] buffer_head;
-
-                bytes_to_read = sizeof(MsgType);
-                buffer = new char[bytes_to_read];
-                buffer_head = buffer;
+                // read the message size
 
                 while ((n = read(sockfd, buffer, bytes_to_read)) > 0) {
                     buffer += n;
+                    bytes_to_read -= n;
                 }
 
-                msg.msgType = (MsgType) *buffer_head;
-
-                delete[] buffer_head;
-
-                bytes_to_read = msg.msgSize;
-                buffer = new char[bytes_to_read];
-                buffer_head = buffer;
-
-                while ((n = read(sockfd, buffer, bytes_to_read)) > 0) {
-                    buffer += n;
+                if (n == -1) {
+                    qDebug() << "error reading:" << strerror(errno);
+                    break;
                 }
 
-                msg.msgData = buffer_head;
-
-                qDebug() << tr(msg.msgData);
-
-//                while ((n = read(sockfd, bp, 1)) > 0) {
-//                    bp += n;
-//                    bytes_to_read -= n;
-//                }
-
-                //write(sockfd, buf, BUFLEN);   // echo to client
-
-                if (n == 0) {
+                // extra check on first read, if we read nothing then it was a disconnect
+                if (n == 0 && bytes_to_read != 0) {
                     printf(" Remote Address:  %s closed connection\n", inet_ntoa(client_addr.sin_addr));
                     close(sockfd);
                     FD_CLR(sockfd, &allset);
                     client[i] = -1;
+                    break;
                 }
+
+                chatMsg.size = (size_t) *buffer_head;
+
+                // read the message type
+
+                delete[] buffer_head;
+
+                bytes_to_read = sizeof(chatMsg.type);
+                buffer = new char[bytes_to_read];
+                buffer_head = buffer;
+
+                while ((n = read(sockfd, buffer, bytes_to_read)) > 0) {
+                    buffer += n;
+                    bytes_to_read -= n;
+                }
+
+                if (n == -1) {
+                    qDebug() << "error reading:" << strerror(errno);
+                    break;
+                }
+
+                chatMsg.type = (MsgType) *buffer_head;
+
+                // read the message data
+
+                delete[] buffer_head;
+
+                bytes_to_read = chatMsg.size;
+                buffer = new char[bytes_to_read];
+                buffer_head = buffer;
+
+                while ((n = read(sockfd, buffer, bytes_to_read)) > 0) {
+                    buffer += n;
+                    bytes_to_read -= n;
+                }
+
+                if (n == -1) {
+                    qDebug() << "error reading:" << strerror(errno);
+                    break;
+                }
+
+                chatMsg.data = buffer_head;
 
                 if (--nready <= 0) {
                     break;        // no more readable descriptors

@@ -8,6 +8,7 @@
 #include <string.h>
 
 #include "client.h"
+#include "chatmsg.h"
 
 Client::Client(in_addr_t ip, uint16_t port, const QString& username) {
     sockaddr_in serverAddress;
@@ -25,9 +26,26 @@ Client::Client(in_addr_t ip, uint16_t port, const QString& username) {
         qDebug() << "error conencting to server:" << strerror(errno);
         throw "error";
     }
-
 }
 
 Client::~Client() {
     close(socket_);
+}
+
+void Client::sendMsg(const QString &msg) {
+    ChatMsg chatMsg;
+
+    chatMsg.size = msg.size() + 1;
+    chatMsg.data = msg.toStdString().c_str();
+    qDebug () << chatMsg.data;
+    chatMsg.type = CHAT;
+    if (send(socket_, (void*) &chatMsg.size, sizeof(chatMsg.size), 0) == -1) {
+        qDebug() << "error sending:" << strerror(errno);
+    }
+    if (send(socket_, (void*) &chatMsg.type, sizeof(chatMsg.type), 0) == -1) {
+        qDebug() << "error sending:" << strerror(errno);
+    }
+    if (send(socket_, (void*) &chatMsg.data, chatMsg.size, 0) == -1) {
+        qDebug() << "error sending:" << strerror(errno);
+    }
 }

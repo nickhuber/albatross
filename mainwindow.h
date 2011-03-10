@@ -21,6 +21,7 @@ private:
     Ui::MainWindow *ui;
     Client* client_;
     Server* server_;
+
     /**
       Hides or shows the client GUI components.
 
@@ -57,6 +58,13 @@ public slots:
       @author Nick Huber
       */
     void slot_disconnect();
+
+    /**
+      Slot for when the send button is clicked when a client is connected.
+
+      @author Nick Huber
+      */
+    void slot_send();
 };
 
 #endif // MAINWINDOW_H
