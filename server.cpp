@@ -183,6 +183,8 @@ void Server::run() {
 
                 chatMsg.data = buffer_head;
 
+                qDebug() << chatMsg.data;
+
                 if (--nready <= 0) {
                     break;        // no more readable descriptors
                 }

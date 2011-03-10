@@ -37,7 +37,6 @@ void Client::sendMsg(const QString &msg) {
 
     chatMsg.size = msg.size() + 1;
     chatMsg.data = msg.toStdString().c_str();
-    qDebug () << chatMsg.data;
     chatMsg.type = CHAT;
     if (send(socket_, (void*) &chatMsg.size, sizeof(chatMsg.size), 0) == -1) {
         qDebug() << "error sending:" << strerror(errno);
@@ -45,7 +44,7 @@ void Client::sendMsg(const QString &msg) {
     if (send(socket_, (void*) &chatMsg.type, sizeof(chatMsg.type), 0) == -1) {
         qDebug() << "error sending:" << strerror(errno);
     }
-    if (send(socket_, (void*) &chatMsg.data, chatMsg.size, 0) == -1) {
+    if (send(socket_, (void*) chatMsg.data, chatMsg.size, 0) == -1) {
         qDebug() << "error sending:" << strerror(errno);
     }
 }
