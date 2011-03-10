@@ -18,7 +18,7 @@ Makefile*
 .qdevelop
 *.user
 *.plist
-/td.xcodeproj
+*.xcodeproj
 /html
 /latex
 albatross
