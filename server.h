@@ -10,6 +10,7 @@ private:
     int socket_;
     uint16_t port_;
     int backlog_;
+    bool running_;
 
 public:
     explicit Server(uint16_t port);

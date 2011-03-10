@@ -1,16 +1,20 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <stdint.h>
+
+// debugging
 #include <QDebug>
+#include <errno.h>
+#include <string.h>
 
 #include "client.h"
 
-Client::Client(in_addr_t ip, uint16_t port, const QString& username)
-{
+Client::Client(in_addr_t ip, uint16_t port, const QString& username) {
     sockaddr_in serverAddress;
 
     if ((socket_ = socket(PF_INET, SOCK_STREAM, 0)) == -1) {
-        qDebug() << "socket error";
+        qDebug() << "error setting up socket:" << strerror(errno);
+        throw "error";
     }
 
     serverAddress.sin_family = AF_INET;
@@ -18,7 +22,8 @@ Client::Client(in_addr_t ip, uint16_t port, const QString& username)
     serverAddress.sin_port = port;
 
     if (connect(socket_, (sockaddr*) &serverAddress, sizeof(serverAddress)) == -1) {
-        qDebug() << "error conencting to server";
+        qDebug() << "error conencting to server:" << strerror(errno);
+        throw "error";
     }
 
 }

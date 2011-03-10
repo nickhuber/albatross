@@ -19,8 +19,8 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    Client* client;
-    Server* server;
+    Client* client_;
+    Server* server_;
     /**
       Hides or shows the client GUI components.
 

@@ -6,10 +6,8 @@
 #include "server.h"
 #include "client.h"
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
-{
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
+
     ui->setupUi(this);
     setClientGuiVisible(true);
 
@@ -19,8 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->connectPushButton, SIGNAL(clicked()), SLOT(slot_connect()));
 }
 
-MainWindow::~MainWindow()
-{
+MainWindow::~MainWindow() {
     delete ui;
 }
 
@@ -28,7 +25,7 @@ void MainWindow::slot_start() {
     bool validNum;
     uint port;
 
-    port = ui->portServerLineEdit->text().toUInt(&validNum);    // TODO: check to see if it fails
+    port = ui->portServerLineEdit->text().toUInt(&validNum);
 
     if (!validNum) {
         qDebug() << "Bad port number";
@@ -36,8 +33,9 @@ void MainWindow::slot_start() {
     }
 
     try {
-        server = new Server(htons(port));
+        server_ = new Server(port);
     } catch (const char*) {
+        delete server_;
         return;
     }
 
@@ -48,7 +46,8 @@ void MainWindow::slot_start() {
 }
 
 void MainWindow::slot_stop() {
-    delete server;
+
+    delete server_;
     ui->startPushButton->setText("Start");
     ui->tabWidget->setTabEnabled(0, true);
     ui->startPushButton->disconnect();
@@ -71,7 +70,12 @@ void MainWindow::slot_connect() {
         return;
     }
 
-    client = new Client(ip, htons(port), ui->usernameLineEdit->text());
+    try {
+        client_ = new Client(ip, htons(port), ui->usernameLineEdit->text());
+    } catch (const char*) {
+        delete client_;
+        return;
+    }
 
     setClientGuiVisible(false);
 
@@ -82,7 +86,8 @@ void MainWindow::slot_connect() {
 }
 
 void MainWindow::slot_disconnect() {
-    delete client;
+
+    delete client_;
 
     setClientGuiVisible(true);
 
