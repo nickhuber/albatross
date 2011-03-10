@@ -29,7 +29,12 @@ void MainWindow::slot_start() {
     uint port;
 
     port = ui->portServerLineEdit->text().toUInt(&validNum);    // TODO: check to see if it fails
-    server = new Server(htons(port));
+    try {
+        server = new Server(htons(port));
+    } catch(const char*) {
+        return;
+    }
+
     ui->startPushButton->setText("Stop");
     ui->tabWidget->setTabEnabled(0, false);
     ui->startPushButton->disconnect();

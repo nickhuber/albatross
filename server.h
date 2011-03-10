@@ -19,7 +19,7 @@ protected:
     void run();
 
 private:
-    void startServer();
+
 };
 
 #endif // SERVER_H

@@ -1,6 +1,7 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
+#include <arpa/inet.h>
 #include <sys/types.h>
 #include <stdint.h>
 #include <QString>
