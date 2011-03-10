@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2011-03-02T10:18:51
+# Albatross Qt Project File
 #
 #-------------------------------------------------
 
@@ -15,6 +15,7 @@ OBJECTS_DIR = ./obj
 MOC_DIR = ./moc
 UI_DIR = ./ui
 
+# icon information
 macx {
     ICON = albatross.icns
 }
@@ -22,6 +23,8 @@ macx {
 winnt {
     RC_FILE = albatross.rc
 }
+
+# code stuff
 
 SOURCES += main.cpp\
     mainwindow.cpp \
@@ -37,5 +40,4 @@ HEADERS  += mainwindow.h \
 
 FORMS    += mainwindow.ui
 
-RESOURCES += \
-    icon.qrc
+RESOURCES += icon.qrc

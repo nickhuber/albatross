@@ -11,16 +11,16 @@
 
 Server::Server(uint16_t port) : socket_(0), port_(port), backlog_(5) {
 
-    if ((socket_ = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+    if ((socket_ = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1) {
         qDebug() << "error creating server socket:" << strerror(errno);
         throw "error";
     }
 
-    int arg = 1;
-    if (setsockopt (socket_, SOL_SOCKET, SO_REUSEADDR, &arg, sizeof(arg)) == -1) {
-        qDebug() << "error setting up socket:" << strerror(errno);
-        throw "error";
-    }
+//    int arg = 1;
+//    if (setsockopt (socket_, SOL_SOCKET, SO_REUSEADDR, &arg, sizeof(arg)) == -1) {
+//        qDebug() << "error setting up socket:" << strerror(errno);
+//        throw "error";
+//    }
 
     sockaddr_in listenTo;
 
@@ -28,7 +28,7 @@ Server::Server(uint16_t port) : socket_(0), port_(port), backlog_(5) {
     listenTo.sin_port = port_;
     listenTo.sin_addr.s_addr = htonl(INADDR_ANY);
 
-    if (bind(socket_, (sockaddr*) &listenTo, sizeof(listenTo)) == -1) {
+    if (bind(socket_, (sockaddr*) &listenTo, sizeof(sockaddr_in)) == -1) {
         qDebug() << "error binding server socket:" << strerror(errno);
         throw "error";
     }
