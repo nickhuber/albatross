@@ -71,7 +71,7 @@ void MainWindow::slot_connect() {
     }
 
     try {
-        client_ = new Client(ip, htons(port), ui->usernameLineEdit->text());
+        client_ = new Client(ip, port, ui->usernameLineEdit->text());
     } catch (const char*) {
         delete client_;
         return;

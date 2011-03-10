@@ -2,6 +2,14 @@
 #define CHATMSG_H
 
 /**
+  Enumeration of the various possible message types.
+  @author Nick Huber
+  */
+enum MsgType {
+    CHAT
+};
+
+/**
   Structure about each message going across the alabtross protocol.
   @author Nick Huber
   */
@@ -10,10 +18,6 @@ struct ChatMsg {
     MsgType msgType;/**< The type of this message. */
     char* userName; /**< Name of user who sent this message. */
     char* msgData;  /**< The data of this message. */
-};
-
-enum MsgType {
-    CHAT
 };
 
 #endif // CHATMSG_H

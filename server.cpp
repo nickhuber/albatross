@@ -7,6 +7,7 @@
 #include <string.h>
 
 #include "server.h"
+#include "chatmsg.h"
 
 
 Server::Server(uint16_t port) : socket_(0), port_(port), backlog_(5), running_(true) {
@@ -53,101 +54,124 @@ Server::~Server() {
 }
 
 void Server::run() {
+    int i, maxi, nready, bytes_to_read;
+    int new_sd, sockfd, maxfd, client[FD_SETSIZE];
+    socklen_t client_len;
+    struct sockaddr_in client_addr;
+    //char *bp, buf[1];
+    ssize_t n;
+    fd_set rset, allset;
 
-    sockaddr_in client;
-    socklen_t client_size;
+    maxfd	= socket_;	// initialize
+    maxi	= -1;		// index into client[] array
 
-    while (running_) {
-        int connected;
-        if ((connected = accept(socket_, (sockaddr*) &client, &client_size)) == -1) {
-            qDebug() << "error accepting:" << strerror(errno);
-        } else {
-            qDebug() << "Remote Address: " << inet_ntoa(client.sin_addr);
-        }
+    for (i = 0; i < FD_SETSIZE; i++) {
+        client[i] = -1;             // -1 indicates available entry
     }
 
-//    int i, maxi, nready, bytes_to_read;
-//    int new_sd, sockfd, maxfd, client[FD_SETSIZE];
-//    socklen_t client_len;
-//    struct sockaddr_in client_addr;
-//    char *bp, buf[1];
-//    ssize_t n;
-//    fd_set rset, allset;
+    FD_ZERO(&allset);
+    FD_SET(socket_, &allset);
 
-//    maxfd	= socket_;	// initialize
-//    maxi	= -1;		// index into client[] array
+    while (true) {
+        rset = allset;               // structure assignment
+        nready = select(maxfd + 1, &rset, NULL, NULL, NULL);
 
-//    for (i = 0; i < FD_SETSIZE; i++) {
-//        client[i] = -1;             // -1 indicates available entry
-//    }
+        if (FD_ISSET(socket_, &rset)) {
+            client_len = sizeof(client_addr);
+            if ((new_sd = accept(socket_, (struct sockaddr *) &client_addr, &client_len)) == -1) {
+                qDebug() << "accept error:" << strerror(errno);
+                return; // TODO: inform main window of failure.
+            }
 
-//    FD_ZERO(&allset);
-//    FD_SET(socket_, &allset);
+            printf(" Remote Address:  %s\n", inet_ntoa(client_addr.sin_addr));
 
-//    while (true) {
-//        rset = allset;               // structure assignment
-//        nready = select(maxfd + 1, &rset, NULL, NULL, NULL);
-//        qDebug() << "select returned";
-//        if (FD_ISSET(socket_, &rset)) {
-//            client_len = sizeof(client_addr);
-//            if ((new_sd = accept(socket_, (struct sockaddr *) &client_addr, &client_len)) == -1) {
-//                qDebug() << "accept error:" << strerror(errno);
-//            }
+            for (i = 0; i < FD_SETSIZE; i++) {
+                if (client[i] < 0) {
+                    client[i] = new_sd;	// save descriptor
+                    break;
+                }
+            }
+            if (i == FD_SETSIZE) {
+                printf ("Too many clients\n");
+                exit(1);
+            }
 
-//            printf(" Remote Address:  %s\n", inet_ntoa(client_addr.sin_addr));
+            FD_SET (new_sd, &allset);     // add new descriptor to set
+            if (new_sd > maxfd) {
+                maxfd = new_sd;	// for select
+            }
 
-//            for (i = 0; i < FD_SETSIZE; i++) {
-//                if (client[i] < 0) {
-//                    client[i] = new_sd;	// save descriptor
-//                    break;
-//                }
-//            }
-//            if (i == FD_SETSIZE) {
-//                printf ("Too many clients\n");
-//                exit(1);
-//            }
+            if (i > maxi) {
+                maxi = i;	// new max index in client[] array
+            }
 
-//            FD_SET (new_sd, &allset);     // add new descriptor to set
-//            if (new_sd > maxfd) {
-//                maxfd = new_sd;	// for select
-//            }
+            if (--nready <= 0) {
+                continue;	// no more readable descriptors
+            }
+        }
 
-//            if (i > maxi) {
-//                maxi = i;	// new max index in client[] array
-//            }
+        for (int i = 0; i <= maxi; i++)	 {
+            if ((sockfd = client[i]) < 0) {
+                continue;
+            }
 
-//            if (--nready <= 0) {
-//                continue;	// no more readable descriptors
-//            }
-//        }
+            if (FD_ISSET(sockfd, &rset)) {
+                bytes_to_read = sizeof(size_t);
+                char* buffer = new char[bytes_to_read];
+                char* buffer_head = buffer;
 
-//        for (int i = 0; i <= maxi; i++)	 {
-//            if ((sockfd = client[i]) < 0) {
-//                continue;
-//            }
+                while ((n = read(sockfd, buffer, bytes_to_read)) > 0) {
+                    buffer += n;
+                }
 
-//            if (FD_ISSET(sockfd, &rset)) {
-//                bp = buf;
-//                bytes_to_read = 1;
+                ChatMsg msg;
+                msg.msgSize = (size_t) *buffer_head;
+
+                delete[] buffer_head;
+
+                bytes_to_read = sizeof(MsgType);
+                buffer = new char[bytes_to_read];
+                buffer_head = buffer;
+
+                while ((n = read(sockfd, buffer, bytes_to_read)) > 0) {
+                    buffer += n;
+                }
+
+                msg.msgType = (MsgType) *buffer_head;
+
+                delete[] buffer_head;
+
+                bytes_to_read = msg.msgSize;
+                buffer = new char[bytes_to_read];
+                buffer_head = buffer;
+
+                while ((n = read(sockfd, buffer, bytes_to_read)) > 0) {
+                    buffer += n;
+                }
+
+                msg.msgData = buffer_head;
+
+                qDebug() << tr(msg.msgData);
 
 //                while ((n = read(sockfd, bp, 1)) > 0) {
 //                    bp += n;
 //                    bytes_to_read -= n;
 //                }
-//                //write(sockfd, buf, BUFLEN);   // echo to client
 
-//                if (n == 0) {
-//                    printf(" Remote Address:  %s closed connection\n", inet_ntoa(client_addr.sin_addr));
-//                    close(sockfd);
-//                    FD_CLR(sockfd, &allset);
-//                    client[i] = -1;
-//                }
+                //write(sockfd, buf, BUFLEN);   // echo to client
 
-//                if (--nready <= 0) {
-//                    break;        // no more readable descriptors
-//                }
-//            }
-//        }
-//    }
+                if (n == 0) {
+                    printf(" Remote Address:  %s closed connection\n", inet_ntoa(client_addr.sin_addr));
+                    close(sockfd);
+                    FD_CLR(sockfd, &allset);
+                    client[i] = -1;
+                }
+
+                if (--nready <= 0) {
+                    break;        // no more readable descriptors
+                }
+            }
+        }
+    }
 
 }
