@@ -23,4 +23,5 @@ Makefile*
 /latex
 albatross
 ui_*
+qrc_*
 /build
