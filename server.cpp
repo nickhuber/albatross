@@ -9,7 +9,7 @@
 #include "server.h"
 
 
-Server::Server(uint16_t port) : port_(port), backlog_(5) {
+Server::Server(uint16_t port) : socket_(0), port_(port), backlog_(5) {
 
     if ((socket_ = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
         qDebug() << "error creating server socket:" << strerror(errno);

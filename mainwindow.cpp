@@ -29,9 +29,15 @@ void MainWindow::slot_start() {
     uint port;
 
     port = ui->portServerLineEdit->text().toUInt(&validNum);    // TODO: check to see if it fails
+
+    if (!validNum) {
+        qDebug() << "Bad port number";
+        return;
+    }
+
     try {
         server = new Server(htons(port));
-    } catch(const char*) {
+    } catch (const char*) {
         return;
     }
 

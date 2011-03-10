@@ -9,6 +9,12 @@ QT       += core gui
 TARGET = albatross
 TEMPLATE = app
 
+# compilation output directories
+DESTDIR = ./bin
+OBJECTS_DIR = ./obj
+MOC_DIR = ./moc
+UI_DIR = ./ui
+
 macx {
     ICON = albatross.icns
 }
