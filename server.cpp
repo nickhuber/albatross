@@ -2,7 +2,7 @@
 #include <arpa/inet.h>
 
 // debugging
-#include <qDebug>
+#include <QDebug>
 #include <errno.h>
 #include <string.h>
 

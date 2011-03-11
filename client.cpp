@@ -3,7 +3,7 @@
 #include <stdint.h>
 
 // debugging
-#include <qDebug>
+#include <QDebug>
 #include <errno.h>
 #include <string.h>
 
