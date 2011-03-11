@@ -20,7 +20,7 @@ return_readMsg readMsg(int socket, ChatMsg& chatMsg) {
 
     // read the message size
 
-    while ((n = read(socket, buffer, bytes_to_read)) > 0) {
+    while ((n = recv(socket, buffer, bytes_to_read, 0)) > 0) {
         buffer += n;
         bytes_to_read -= n;
     }
@@ -45,7 +45,7 @@ return_readMsg readMsg(int socket, ChatMsg& chatMsg) {
     buffer = new char[bytes_to_read];
     buffer_head = buffer;
 
-    while ((n = read(socket, buffer, bytes_to_read)) > 0) {
+    while ((n = recv(socket, buffer, bytes_to_read, 0)) > 0) {
         buffer += n;
         bytes_to_read -= n;
     }
@@ -64,7 +64,7 @@ return_readMsg readMsg(int socket, ChatMsg& chatMsg) {
     buffer = new char[bytes_to_read];
     buffer_head = buffer;
 
-    while ((n = read(socket, buffer, bytes_to_read)) > 0) {
+    while ((n = recv(socket, buffer, bytes_to_read, 0)) > 0) {
      buffer += n;
      bytes_to_read -= n;
     }
@@ -82,7 +82,7 @@ return_readMsg readMsg(int socket, ChatMsg& chatMsg) {
     buffer = new char[bytes_to_read];
     buffer_head = buffer;
 
-    while ((n = read(socket, buffer, bytes_to_read)) > 0) {
+    while ((n = recv(socket, buffer, bytes_to_read, 0)) > 0) {
         buffer += n;
         bytes_to_read -= n;
     }
@@ -101,7 +101,7 @@ return_readMsg readMsg(int socket, ChatMsg& chatMsg) {
     buffer = new char[bytes_to_read];
     buffer_head = buffer;
 
-    while ((n = read(socket, buffer, bytes_to_read)) > 0) {
+    while ((n = recv(socket, buffer, bytes_to_read, 0)) > 0) {
         buffer += n;
         bytes_to_read -= n;
     }
