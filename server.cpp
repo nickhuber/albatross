@@ -132,8 +132,6 @@ void Server::run() {
 
                         }
                         break;
-                    case kUsername:
-                        break;
                     }
 
                     break;

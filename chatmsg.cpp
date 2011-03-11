@@ -31,10 +31,47 @@ return_readMsg readMsg(int socket, ChatMsg& chatMsg) {
     }
 
     chatMsg.size = (int) *buffer_head;
+    delete[] buffer_head;
+
+
+    // read the nameSize
+
+    bytes_to_read = sizeof(chatMsg.nameSize);
+    buffer = new char[bytes_to_read];
+    buffer_head = buffer;
+
+    while ((n = read(socket, buffer, bytes_to_read)) > 0) {
+        buffer += n;
+        bytes_to_read -= n;
+    }
+
+    if (n == -1) {
+        qDebug() << "error reading:" << strerror(errno);
+        return kError;
+    }
+
+    chatMsg.nameSize = (int) *buffer_head;
+    delete[] buffer_head;
+
+    // read the username
+
+    bytes_to_read = chatMsg.nameSize;
+    buffer = new char[bytes_to_read];
+    buffer_head = buffer;
+
+    while ((n = read(socket, buffer, bytes_to_read)) > 0) {
+     buffer += n;
+     bytes_to_read -= n;
+    }
+
+    if (n == -1) {
+     qDebug() << "error reading:" << strerror(errno);
+     return kError;
+    }
+
+    chatMsg.username = buffer_head;
 
     // read the message type
-
-    delete[] buffer_head;
 
     bytes_to_read = sizeof(chatMsg.type);
     buffer = new char[bytes_to_read];
@@ -51,10 +88,9 @@ return_readMsg readMsg(int socket, ChatMsg& chatMsg) {
     }
 
     chatMsg.type = (MsgType) *buffer_head;
+    delete[] buffer_head;
 
     // read the message data
-
-    delete[] buffer_head;
 
     bytes_to_read = chatMsg.size;
     buffer = new char[bytes_to_read];
@@ -77,6 +113,14 @@ return_readMsg readMsg(int socket, ChatMsg& chatMsg) {
 
 bool sendMsg(int socket, const ChatMsg& chatMsg) {
     if (send(socket, (void*) &chatMsg.size, sizeof(chatMsg.size), 0) == -1) {
+        qDebug() << "error sending:" << strerror(errno);
+        return false;
+    }
+    if (send(socket, (void*) &chatMsg.nameSize, sizeof(chatMsg.nameSize), 0) == -1) {
+        qDebug() << "error sending:" << strerror(errno);
+        return false;
+    }
+    if (send(socket, (void*) chatMsg.username, chatMsg.nameSize, 0) == -1) {
         qDebug() << "error sending:" << strerror(errno);
         return false;
     }

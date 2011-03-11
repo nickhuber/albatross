@@ -11,6 +11,8 @@
 
 class Client : public QThread
 {
+    Q_OBJECT
+
 public:
     /**
       Constructor for the client. Opens a connection.
@@ -33,6 +35,9 @@ private:
     int socket_;
     bool running_;
     QString username_;
+
+signals:
+    void signal_displayMessage(const QString& username, const QString& message) const;
 
 protected:
     void run();

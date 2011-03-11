@@ -27,8 +27,6 @@ Client::Client(in_addr_t ip, uint16_t port, const QString& username) : socket_(0
         throw;
     }
 
-    sendMsg(kUsername, username.size() + 1, username.toStdString().c_str());
-
     QThread::start();
 }
 
@@ -44,9 +42,12 @@ Client::~Client() {
 void Client::sendMsg(MsgType type, const int length, const char* data) const {
     ChatMsg chatMsg;
     chatMsg.size = length;
+    chatMsg.nameSize = username_.size() + 1;
+    chatMsg.username = username_.toStdString().c_str();
     chatMsg.type = type;
     chatMsg.data = data;
     ::sendMsg(socket_, chatMsg);
+    emit signal_displayMessage(username_, chatMsg.data);
 }
 
 void Client::run() {
@@ -54,10 +55,9 @@ void Client::run() {
     while (running_) {
         switch (readMsg(socket_, chatMsg)) {
         case kSuccess:
-            qDebug() << chatMsg.data;
+            emit signal_displayMessage(chatMsg.username, chatMsg.data);
             break;
         case kDisconnect:
-            qDebug() << "connection closed";
             shutdown(socket_, SHUT_RDWR);
             running_ = false;
             break;

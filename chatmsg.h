@@ -1,3 +1,17 @@
+/**
+  @file
+
+  Important. Sends and receives data in a specific order.
+  <ol>
+    <li>size</li>
+    <li>nameSize</li>
+    <li>username</li>
+    <li>type</li>
+    <li>data</li>
+  </ol>
+
+  */
+
 #ifndef CHATMSG_H
 #define CHATMSG_H
 
@@ -10,7 +24,6 @@
   */
 enum MsgType {
     kChat,     /**< Textual chat msg. */
-    kUsername  /**< Username set msg. */
 };
 
 /**
@@ -18,9 +31,11 @@ enum MsgType {
   @author Nick Huber
   */
 struct ChatMsg {
-    int size;         /**< The size of this message's data. */
-    MsgType type;     /**< The type of this message. */
-    const char* data; /**< The data of this message. */
+    int size;             /**< The size of this message's data. */
+    int nameSize;         /**< The size of this user's username.*/
+    const char* username; /**< The user's username. */
+    MsgType type;         /**< The type of this message. */
+    const char* data;     /**< The data of this message. */
 };
 
 /**

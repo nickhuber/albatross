@@ -74,7 +74,9 @@ void MainWindow::slot_connect() {
 
     try {
         client_ = new Client(ip, port, ui->usernameLineEdit->text());
+        connect(client_, SIGNAL(signal_displayMessage(QString,QString)), SLOT(slot_displayMessage(QString,QString)));
     } catch (...) {
+        disconnect(client_);
         delete client_;
         return;
     }
@@ -89,6 +91,7 @@ void MainWindow::slot_connect() {
 
 void MainWindow::slot_disconnect() {
 
+    disconnect(client_);
     delete client_;
 
     setClientGuiVisible(true);
@@ -102,6 +105,10 @@ void MainWindow::slot_disconnect() {
 void MainWindow::slot_send() {
     QString message = ui->sendLineEdit->text();
     client_->sendMsg(kChat, message.size() + 1, message.toStdString().c_str());
+}
+
+void MainWindow::slot_displayMessage(const QString& username, const QString& message) {
+    ui->chatMessagesText->append(username + ": " + message);
 }
 
 void MainWindow::setClientGuiVisible(bool visible) {

@@ -65,6 +65,15 @@ public slots:
       @author Nick Huber
       */
     void slot_send();
+
+    /**
+      Slot for displaying a message. Updates the text window with the message.
+
+      @param username The sender's username.
+      @param message The sender's message.
+      @author Nick Huber
+      */
+    void slot_displayMessage(const QString& username, const QString& message);
 };
 
 #endif // MAINWINDOW_H
