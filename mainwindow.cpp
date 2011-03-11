@@ -48,6 +48,8 @@ void MainWindow::slot_start()
         return;
     }
 
+    connect(server_, SIGNAL(signal_clientConnected(QString)), SLOT(slot_connectedClient(QString)));
+    connect(server_, SIGNAL(signal_clientDisconnect(int)), SLOT(slot_disconnectedClient(int)));
     ui->startPushButton->setText("Stop");
     ui->tabWidget->setTabEnabled(0, false);
     ui->startPushButton->disconnect();
@@ -56,6 +58,8 @@ void MainWindow::slot_start()
 
 void MainWindow::slot_stop()
 {
+    disconnect(server_, SIGNAL(signal_clientConnected(QString)));
+    disconnect(server_, SIGNAL(signal_clientDisconnect(int)));
     delete server_;
     ui->startPushButton->setText("Start");
     ui->tabWidget->setTabEnabled(0, true);
@@ -121,6 +125,15 @@ void MainWindow::slot_send()
 void MainWindow::slot_displayMessage(const QString& username, const QString& message)
 {
     ui->chatMessagesText->append(username + ": " + message);
+}
+
+void MainWindow::slot_connectedClient(const QString &address)
+{
+    ui->clientList->addItem(address);
+}
+
+void MainWindow::slot_disconnectedClient(const int index) {
+    ui->clientList->takeItem(index);
 }
 
 void MainWindow::setClientGuiVisible(bool visible)

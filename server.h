@@ -3,8 +3,10 @@
 
 #include <stdint.h>
 #include <QThread>
+#include <QString>
 
 class Server : public QThread {
+    Q_OBJECT
 
 private:
     int socket_;
@@ -19,7 +21,9 @@ public:
 protected:
     void run();
 
-private:
+signals:
+    void signal_clientConnected(const QString& address);
+    void signal_clientDisconnect(const int index);
 
 };
 

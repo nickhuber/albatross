@@ -73,6 +73,22 @@ public slots:
       @author Nick Huber
       */
     void slot_displayMessage(const QString& username, const QString& message);
+
+    /**
+      Slot for when a client is connected to update the server list.
+
+      @param address The client's IP address.
+      @author Nick Huber
+      */
+    void slot_connectedClient(const QString& address);
+
+    /**
+      Slot for when a client disconnects from the server, to remove from the list.
+
+      @param index The index of the client
+      @author Nick Huber
+      */
+    void slot_disconnectedClient(const int index);
 };
 
 #endif // MAINWINDOW_H

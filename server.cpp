@@ -94,7 +94,7 @@ void Server::run()
                 return; // TODO: inform main window of failure.
             }
 
-            printf(" Remote Address:  %s\n", inet_ntoa(client_addr.sin_addr));
+            emit signal_clientConnected(QString(inet_ntoa(client_addr.sin_addr)));
 
             for (clientIndex = 0; clientIndex < FD_SETSIZE; clientIndex++) {
                 if (client[clientIndex] < 0) {
@@ -155,7 +155,7 @@ void Server::run()
 
                         break;
                     case kDisconnect:
-                        qDebug() << "connection closed";
+                        emit signal_clientDisconnect(i);
                         close(currentClientSocket);
                         FD_CLR(currentClientSocket, &allset);
                         client[i] = -1;

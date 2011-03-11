@@ -10,12 +10,14 @@ TARGET = albatross
 TEMPLATE = app
 
 # compilation output directories
+
 DESTDIR = ./bin
 OBJECTS_DIR = ./obj
 MOC_DIR = ./moc
 UI_DIR = ./ui
 
 # icon information
+
 macx {
     ICON = albatross.icns
 }

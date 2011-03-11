@@ -42,7 +42,7 @@
      <enum>QTabWidget::Rounded</enum>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <property name="elideMode">
      <enum>Qt::ElideRight</enum>
@@ -174,17 +174,20 @@
        </rect>
       </property>
       <layout class="QFormLayout" name="formLayout_2">
-       <item row="0" column="1">
-        <widget class="QLabel" name="serverIPStatic">
-         <property name="text">
-          <string>0.0.0.0</string>
-         </property>
-        </widget>
-       </item>
+       <property name="fieldGrowthPolicy">
+        <enum>QFormLayout::FieldsStayAtSizeHint</enum>
+       </property>
        <item row="0" column="0">
         <widget class="QLabel" name="serverServerIPLabel">
          <property name="text">
           <string>IP Address</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLabel" name="serverIPStatic">
+         <property name="text">
+          <string>0.0.0.0</string>
          </property>
         </widget>
        </item>
@@ -202,15 +205,15 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="0" colspan="2">
-        <widget class="QTableView" name="statsTable"/>
-       </item>
        <item row="3" column="0" colspan="2">
         <widget class="QPushButton" name="startPushButton">
          <property name="text">
           <string>Start</string>
          </property>
         </widget>
+       </item>
+       <item row="2" column="0" colspan="2">
+        <widget class="QListWidget" name="clientList"/>
        </item>
       </layout>
      </widget>
