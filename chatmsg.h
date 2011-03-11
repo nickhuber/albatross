@@ -17,7 +17,7 @@ enum MsgType {
   @author Nick Huber
   */
 struct ChatMsg {
-    size_t size;          /**< The size of this message. */
+    int size;             /**< The size of this message. */
     MsgType type;         /**< The type of this message. */
     const char* username; /**< Name of user who sent this message. */
     const char* data;     /**< The data of this message. */

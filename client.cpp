@@ -31,7 +31,7 @@ Client::Client(in_addr_t ip, uint16_t port, const QString& username) {
 }
 
 Client::~Client() {
-    close(socket_);
+    shutdown(socket_, SHUT_RDWR);
     running_ = false;
     // TODO: convert this to a mutex
     while(isRunning()) { // wait for thread to exit
@@ -56,7 +56,8 @@ void Client::run() {
             break;
         case kDisconnect:
             qDebug() << "connection closed";
-            close(socket_);
+            shutdown(socket_, SHUT_RDWR);
+            running_ = false;
             break;
         case kError:
             break;

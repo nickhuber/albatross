@@ -44,7 +44,7 @@ Server::Server(uint16_t port) : socket_(0), port_(port), backlog_(5), running_(t
 }
 
 Server::~Server() {
-   close(socket_);
+   shutdown(socket_, SHUT_RDWR);
    running_ = false;
    // TODO: convert this to a mutex
    while(isRunning()) { // wait for thread to exit
@@ -131,7 +131,7 @@ void Server::run() {
                     break;
                 case kDisconnect:
                     qDebug() << "connection closed";
-                    close(currentClientSocket);
+                    shutdown(currentClientSocket, SHUT_RDWR);
                     FD_CLR(currentClientSocket, &allset);
                     client[i] = -1;
                     break;
