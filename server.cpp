@@ -69,7 +69,7 @@ void Server::run() {
     FD_ZERO(&allset);
     FD_SET(socket_, &allset);
 
-    while (true) {
+    while (running_) {
         rset = allset;               // structure assignment
         numReady = select(maxfd + 1, &rset, NULL, NULL, NULL);
 

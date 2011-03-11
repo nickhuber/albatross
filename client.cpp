@@ -10,7 +10,7 @@
 #include "client.h"
 #include "chatmsg.h"
 
-Client::Client(in_addr_t ip, uint16_t port, const QString& username) {
+Client::Client(in_addr_t ip, uint16_t port, const QString& username) : socket_(0), running_(true), username_(username) {
     sockaddr_in serverAddress;
 
     if ((socket_ = socket(PF_INET, SOCK_STREAM, 0)) == -1) {
@@ -39,12 +39,12 @@ Client::~Client() {
     }
 }
 
-void Client::sendTextMsg(const QString& msg) {
+void Client::sendMsg(MsgType type, const int length, const char* data) const {
     ChatMsg chatMsg;
-    chatMsg.size = msg.size() + 1;
-    chatMsg.data = msg.toStdString().c_str();
-    chatMsg.type = kChat;
-    sendMsg(socket_, chatMsg);
+    chatMsg.size = length;
+    chatMsg.type = type;
+    chatMsg.data = data;
+    ::sendMsg(socket_, chatMsg);
 }
 
 void Client::run() {

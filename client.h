@@ -7,6 +7,8 @@
 #include <QString>
 #include <QThread>
 
+#include "chatmsg.h"
+
 class Client : public QThread
 {
 public:
@@ -26,10 +28,11 @@ public:
       */
     ~Client();
 
-    void sendTextMsg(const QString& msg);
+    void sendMsg(MsgType type, const int length, const char* data) const ;
 private:
     int socket_;
     bool running_;
+    QString username_;
 
 protected:
     void run();

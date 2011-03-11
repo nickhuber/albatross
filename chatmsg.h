@@ -9,7 +9,8 @@
   @author Nick Huber
   */
 enum MsgType {
-    kChat /**< Msg is a textual chat msg. */
+    kChat,     /**< Textual chat msg. */
+    kUsername  /**< Username set msg. */
 };
 
 /**
@@ -17,9 +18,8 @@ enum MsgType {
   @author Nick Huber
   */
 struct ChatMsg {
-    int size;             /**< The size of this message. */
+    int size;         /**< The size of this message's data. */
     MsgType type;         /**< The type of this message. */
-    const char* username; /**< Name of user who sent this message. */
     const char* data;     /**< The data of this message. */
 };
 

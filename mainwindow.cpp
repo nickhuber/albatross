@@ -99,7 +99,8 @@ void MainWindow::slot_disconnect() {
 }
 
 void MainWindow::slot_send() {
-    client_->sendTextMsg(ui->sendLineEdit->text());
+    QString message = ui->sendLineEdit->text();
+    client_->sendMsg(kChat, message.size() + 1, message.toStdString().c_str());
 }
 
 void MainWindow::setClientGuiVisible(bool visible) {

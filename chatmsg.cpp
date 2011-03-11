@@ -30,7 +30,7 @@ return_readMsg readMsg(int socket, ChatMsg& chatMsg) {
         return kDisconnect;
     }
 
-    chatMsg.size = (size_t) *buffer_head;
+    chatMsg.size = (int) *buffer_head;
 
     // read the message type
 
