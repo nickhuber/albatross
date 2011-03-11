@@ -1,8 +1,7 @@
 #ifndef CONNECTION_H
 #define CONNECTION_H
 
-class Connection
-{
+class Connection {
 public:
     Connection();
 };

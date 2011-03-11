@@ -17,21 +17,22 @@ typedef int socklen_t;
 #include "server.h"
 #include "chatmsg.h"
 
-Server::Server(uint16_t port) : socket_(0), port_(port), backlog_(5), running_(true) {
-
+Server::Server(uint16_t port) : socket_(0), port_(port), backlog_(5), running_(true)
+{
     if ((socket_ = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1) {
         qDebug() << "error creating server socket:" << strerror(errno);
         throw;
     }
 
     int arg = 1;
-    if (setsockopt (socket_, SOL_SOCKET, SO_REUSEADDR, (char*) &arg, sizeof(arg)) == -1) {
+
+    if (setsockopt(socket_, SOL_SOCKET, SO_REUSEADDR, (char*) &arg, sizeof(arg)) == -1) {
         qDebug() << "error setting up socket:" << strerror(errno);
         throw;
     }
 
     sockaddr_in listenTo;
-    memset((char *) &listenTo, 0, sizeof(listenTo));
+    memset((char*) &listenTo, 0, sizeof(listenTo));
     listenTo.sin_family = AF_INET;
     listenTo.sin_port = port_;
     listenTo.sin_addr.s_addr = htonl(INADDR_ANY);
@@ -47,26 +48,27 @@ Server::Server(uint16_t port) : socket_(0), port_(port), backlog_(5), running_(t
         throw;
     }
 
-
     QThread::start();
 }
 
-Server::~Server() {
-   shutdown(socket_, SHUT_RDWR);
-   running_ = false;
-   // TODO: convert this to a mutex
-   while(isRunning()) { // wait for thread to exit
-       ;
-   }
+Server::~Server()
+{
+    shutdown(socket_, SHUT_RDWR);
+    running_ = false;
+
+    // TODO: convert this to a mutex
+    while (isRunning()) { // wait for thread to exit
+        ;
+    }
 }
 
-void Server::run() {
+void Server::run()
+{
     int clientIndex, maxIndex, numReady;
     int newClientSocket, currentClientSocket, maxfd, client[FD_SETSIZE];
     socklen_t client_len;
     sockaddr_in client_addr;
     fd_set rset, allset;
-
     maxfd	= socket_;	// initialize
     maxIndex	= -1;		// index into client[] array
 
@@ -83,7 +85,8 @@ void Server::run() {
 
         if (FD_ISSET(socket_, &rset)) {
             client_len = sizeof(client_addr);
-            if ((newClientSocket = accept(socket_, (sockaddr *) &client_addr, &client_len)) == -1) {
+
+            if ((newClientSocket = accept(socket_, (sockaddr*) &client_addr, &client_len)) == -1) {
                 qDebug() << "accept error:" << strerror(errno);
                 return; // TODO: inform main window of failure.
             }
@@ -96,11 +99,13 @@ void Server::run() {
                     break;
                 }
             }
+
             if (clientIndex == FD_SETSIZE) {
                 qDebug() << "Too many clients";
             }
 
-            FD_SET (newClientSocket, &allset);     // add new descriptor to set
+            FD_SET(newClientSocket, &allset);      // add new descriptor to set
+
             if (newClientSocket > maxfd) {
                 maxfd = newClientSocket;	// for select
             }
@@ -123,34 +128,37 @@ void Server::run() {
                 ChatMsg chatMsg;
 
                 switch (readMsg(currentClientSocket, chatMsg)) {
-                case kSuccess:
-                    qDebug() << chatMsg.data;
+                    case kSuccess:
+                        qDebug() << chatMsg.data;
 
-                    switch (chatMsg.type) {
-                    case kChat:
-                        for (int j = 0; j <= maxIndex; j++) {
-                            if (client[j] == -1) {
-                                continue;
-                            }
-                            if (client[j] == currentClientSocket) {
-                                continue;
-                            }
-                            qDebug() << "sending";
-                            sendMsg(client[j], chatMsg);
+                        switch (chatMsg.type) {
+                            case kChat:
 
+                                for (int j = 0; j <= maxIndex; j++) {
+                                    if (client[j] == -1) {
+                                        continue;
+                                    }
+
+                                    if (client[j] == currentClientSocket) {
+                                        continue;
+                                    }
+
+                                    qDebug() << "sending";
+                                    sendMsg(client[j], chatMsg);
+                                }
+
+                                break;
                         }
-                        break;
-                    }
 
-                    break;
-                case kDisconnect:
-                    qDebug() << "connection closed";
-                    shutdown(currentClientSocket, SHUT_RDWR);
-                    FD_CLR(currentClientSocket, &allset);
-                    client[i] = -1;
-                    break;
-                case kError:
-                    break;
+                        break;
+                    case kDisconnect:
+                        qDebug() << "connection closed";
+                        shutdown(currentClientSocket, SHUT_RDWR);
+                        FD_CLR(currentClientSocket, &allset);
+                        client[i] = -1;
+                        break;
+                    case kError:
+                        break;
                 }
 
                 if (--numReady <= 0) {

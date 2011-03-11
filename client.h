@@ -17,8 +17,7 @@ typedef unsigned int in_addr_t;
 
 #include "chatmsg.h"
 
-class Client : public QThread
-{
+class Client : public QThread {
     Q_OBJECT
 
 public:
@@ -40,14 +39,25 @@ public:
 
     void sendMsg(MsgType type, const int length, const char* data) const ;
 private:
-    int socket_;
-    bool running_;
-    QString username_;
+    int socket_;       /**< Handle to the socket. */
+    bool running_;     /**< Whether or not the thread should be running. */
+    QString username_; /**< This client's username. */
 
 signals:
+    /**
+      Signal to display a message for the client, showing username: message.
+
+      @param username The username to show.
+      @param message The message to show.
+      @author Nick Huber
+      */
     void signal_displayMessage(const QString& username, const QString& message) const;
 
 protected:
+    /**
+      The client thread method, receives any incoming data and signals the GUI
+      to update when it does.
+      */
     void run();
 };
 

@@ -18,7 +18,8 @@
 #include "client.h"
 #include "chatmsg.h"
 
-Client::Client(in_addr_t ip, uint16_t port, const QString& username) : socket_(0), running_(true), username_(username) {
+Client::Client(in_addr_t ip, uint16_t port, const QString& username) : socket_(0), running_(true), username_(username)
+{
     sockaddr_in serverAddress;
 
     if ((socket_ = socket(PF_INET, SOCK_STREAM, 0)) == -1) {
@@ -38,16 +39,19 @@ Client::Client(in_addr_t ip, uint16_t port, const QString& username) : socket_(0
     QThread::start();
 }
 
-Client::~Client() {
+Client::~Client()
+{
     shutdown(socket_, SHUT_RDWR);
     running_ = false;
+
     // TODO: convert this to a mutex
-    while(isRunning()) { // wait for thread to exit
+    while (isRunning()) { // wait for thread to exit
         ;
     }
 }
 
-void Client::sendMsg(MsgType type, const int length, const char* data) const {
+void Client::sendMsg(MsgType type, const int length, const char* data) const
+{
     ChatMsg chatMsg;
     chatMsg.size = length;
     chatMsg.nameSize = username_.size() + 1;
@@ -58,19 +62,21 @@ void Client::sendMsg(MsgType type, const int length, const char* data) const {
     emit signal_displayMessage(username_, chatMsg.data);
 }
 
-void Client::run() {
+void Client::run()
+{
     ChatMsg chatMsg;
+
     while (running_) {
         switch (readMsg(socket_, chatMsg)) {
-        case kSuccess:
-            emit signal_displayMessage(chatMsg.username, chatMsg.data);
-            break;
-        case kDisconnect:
-            shutdown(socket_, SHUT_RDWR);
-            running_ = false;
-            break;
-        case kError:
-            break;
+            case kSuccess:
+                emit signal_displayMessage(chatMsg.username, chatMsg.data);
+                break;
+            case kDisconnect:
+                shutdown(socket_, SHUT_RDWR);
+                running_ = false;
+                break;
+            case kError:
+                break;
         }
     }
 }

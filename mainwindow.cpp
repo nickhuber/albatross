@@ -14,12 +14,10 @@
 #include "server.h"
 #include "client.h"
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
-
+MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWindow)
+{
     ui->setupUi(this);
-
     setClientGuiVisible(true);
-
     setWindowIcon(QIcon(":/albatross.png"));
     setWindowTitle(tr("Albatross"));
     connect(ui->startPushButton, SIGNAL(clicked()), SLOT(slot_start()));
@@ -27,14 +25,15 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(ui->sendPushButton, SIGNAL(clicked()), SLOT(slot_send()));
 }
 
-MainWindow::~MainWindow() {
+MainWindow::~MainWindow()
+{
     delete ui;
 }
 
-void MainWindow::slot_start() {
+void MainWindow::slot_start()
+{
     bool validNum;
     uint port;
-
     port = ui->portServerLineEdit->text().toUInt(&validNum);
 
     if (!validNum) {
@@ -55,8 +54,8 @@ void MainWindow::slot_start() {
     connect(ui->startPushButton, SIGNAL(clicked()), SLOT(slot_stop()));
 }
 
-void MainWindow::slot_stop() {
-
+void MainWindow::slot_stop()
+{
     delete server_;
     ui->startPushButton->setText("Start");
     ui->tabWidget->setTabEnabled(0, true);
@@ -64,7 +63,8 @@ void MainWindow::slot_stop() {
     connect(ui->startPushButton, SIGNAL(clicked()), SLOT(slot_start()));
 }
 
-void MainWindow::slot_connect() {
+void MainWindow::slot_connect()
+{
     bool validNum;
     in_addr_t ip;
     uint16_t port;
@@ -80,6 +80,7 @@ void MainWindow::slot_connect() {
     }
 
     port = ui->portLineEdit->text().toUInt(&validNum);
+
     if (!validNum) {
         qDebug() << "Bad port number";
         return;
@@ -91,39 +92,39 @@ void MainWindow::slot_connect() {
         delete client_;
         return;
     }
-    connect(client_, SIGNAL(signal_displayMessage(QString,QString)), SLOT(slot_displayMessage(QString,QString)));
 
+    connect(client_, SIGNAL(signal_displayMessage(QString, QString)), SLOT(slot_displayMessage(QString, QString)));
     setClientGuiVisible(false);
-
     ui->connectPushButton->setText(tr("Disconnect"));
     ui->tabWidget->setTabEnabled(1, false);
     ui->connectPushButton->disconnect();
     connect(ui->connectPushButton, SIGNAL(clicked()), SLOT(slot_disconnect()));
 }
 
-void MainWindow::slot_disconnect() {
-
-    disconnect(client_, SIGNAL(signal_displayMessage(QString,QString)));
+void MainWindow::slot_disconnect()
+{
+    disconnect(client_, SIGNAL(signal_displayMessage(QString, QString)));
     delete client_;
-
     setClientGuiVisible(true);
-
     ui->connectPushButton->setText(tr("Connect"));
     ui->tabWidget->setTabEnabled(1, true);
     ui->connectPushButton->disconnect();
     connect(ui->connectPushButton, SIGNAL(clicked()), SLOT(slot_connect()));
 }
 
-void MainWindow::slot_send() {
+void MainWindow::slot_send()
+{
     QString message = ui->sendLineEdit->text();
     client_->sendMsg(kChat, message.size() + 1, message.toStdString().c_str());
 }
 
-void MainWindow::slot_displayMessage(const QString& username, const QString& message) {
+void MainWindow::slot_displayMessage(const QString& username, const QString& message)
+{
     ui->chatMessagesText->append(username + ": " + message);
 }
 
-void MainWindow::setClientGuiVisible(bool visible) {
+void MainWindow::setClientGuiVisible(bool visible)
+{
     ui->saveSessionLabel->setVisible(visible);
     ui->saveSessionCheckBox->setVisible(visible);
     ui->serverIPLabel->setVisible(visible);
@@ -131,7 +132,6 @@ void MainWindow::setClientGuiVisible(bool visible) {
     ui->portLabel->setVisible(visible);
     ui->portLineEdit->setVisible(visible);
     ui->usernameLineEdit->setEnabled(visible);
-
     ui->chatMessagesText->setVisible(!visible);
     ui->sendLineEdit->setVisible(!visible);
     ui->sendPushButton->setVisible(!visible);

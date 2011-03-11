@@ -6,7 +6,8 @@
 
 #include "mainwindow.h"
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[])
+{
 #ifdef _WIN32
     WSADATA wsaData;
 
@@ -14,17 +15,14 @@ int main(int argc, char *argv[]) {
         WSACleanup();
         return 1;
     }
-#endif
 
+#endif
     QApplication a(argc, argv);
     MainWindow w;
     w.show();
-
     int retCode = a.exec();
-
 #ifdef _WIN32
     WSACleanup();
 #endif
     return retCode;
-
 }
