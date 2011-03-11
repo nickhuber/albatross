@@ -1,0 +1,14 @@
+Albatross
+=========
+
+Multi-OS Chat program.
+
+Compilation
+-----------
+
+- Windows
+    qmake -spec win32-g++ && mingw32-make
+- OS X
+    qmake -spec macx-g++ && make
+- Linux
+    qmake && make
