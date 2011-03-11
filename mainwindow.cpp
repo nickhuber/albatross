@@ -43,8 +43,8 @@ void MainWindow::slot_start()
 
     try {
         server_ = new Server(port);
-    } catch (...) {
-        delete server_;
+    } catch (const QString& e) {
+        qDebug() << e;
         return;
     }
 
@@ -88,8 +88,8 @@ void MainWindow::slot_connect()
 
     try {
         client_ = new Client(ip, port, ui->usernameLineEdit->text());
-    } catch (...) {
-        delete client_;
+    } catch (const QString& e) {
+        qDebug() << e;
         return;
     }
 

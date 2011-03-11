@@ -4,8 +4,8 @@
 #endif
 
 #ifdef _WIN32
+#define close closesocket
 #include <winsock2.h>
-#define SHUT_RDWR 2 // TODO: this should be SD_BOTH but that won't work
 typedef int socklen_t;
 #endif
 
@@ -20,15 +20,17 @@ typedef int socklen_t;
 Server::Server(uint16_t port) : socket_(0), port_(port), backlog_(5), running_(true)
 {
     if ((socket_ = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1) {
-        qDebug() << "error creating server socket:" << strerror(errno);
-        throw;
+        QString exception("error creating server socket: ");
+        exception.append(strerror(errno));
+        throw exception;
     }
 
     int arg = 1;
 
     if (setsockopt(socket_, SOL_SOCKET, SO_REUSEADDR, (char*) &arg, sizeof(arg)) == -1) {
-        qDebug() << "error setting up socket:" << strerror(errno);
-        throw;
+        QString exception("error setting up socket: ");
+        exception.append(strerror(errno));
+        throw exception;
     }
 
     sockaddr_in listenTo;
@@ -38,14 +40,15 @@ Server::Server(uint16_t port) : socket_(0), port_(port), backlog_(5), running_(t
     listenTo.sin_addr.s_addr = htonl(INADDR_ANY);
 
     if (bind(socket_, (sockaddr*) &listenTo, sizeof(listenTo)) == -1) {
-        qDebug() << listenTo.sin_addr.s_addr << listenTo.sin_family << listenTo.sin_port << socket_;
-        qDebug() << "error binding server socket:" << strerror(errno);
-        throw;
+        QString exception("error binding server socket: ");
+        exception.append(strerror(errno));
+        throw exception;
     }
 
     if (listen(socket_, backlog_) == -1) {
-        qDebug() << "error listening on server socket:" << strerror(errno);
-        throw;
+        QString exception("error listening on server socket: ");
+        exception.append(strerror(errno));
+        throw exception;
     }
 
     QThread::start();
@@ -53,7 +56,7 @@ Server::Server(uint16_t port) : socket_(0), port_(port), backlog_(5), running_(t
 
 Server::~Server()
 {
-    shutdown(socket_, SHUT_RDWR);
+    close(socket_);
     running_ = false;
 
     // TODO: convert this to a mutex
@@ -153,7 +156,7 @@ void Server::run()
                         break;
                     case kDisconnect:
                         qDebug() << "connection closed";
-                        shutdown(currentClientSocket, SHUT_RDWR);
+                        close(currentClientSocket);
                         FD_CLR(currentClientSocket, &allset);
                         client[i] = -1;
                         break;

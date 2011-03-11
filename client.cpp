@@ -5,13 +5,14 @@
 
 #ifdef _WIN32
 #include <winsock2.h>
+#define close closesocket
 #define SHUT_RDWR 2 // TODO: this should be SD_BOTH but that won't work
 #endif
 
 #include <stdint.h>
+#include <QString>
 
 // debugging
-#include <QDebug>
 #include <errno.h>
 #include <string.h>
 
@@ -23,8 +24,9 @@ Client::Client(in_addr_t ip, uint16_t port, const QString& username) : socket_(0
     sockaddr_in serverAddress;
 
     if ((socket_ = socket(PF_INET, SOCK_STREAM, 0)) == -1) {
-        qDebug() << "error setting up socket:" << strerror(errno);
-        throw;
+        QString exception("error setting up socket: ");
+        exception.append(strerror(errno));
+        throw exception;
     }
 
     serverAddress.sin_family = AF_INET;
@@ -32,8 +34,9 @@ Client::Client(in_addr_t ip, uint16_t port, const QString& username) : socket_(0
     serverAddress.sin_port = port;
 
     if (::connect(socket_, (sockaddr*) &serverAddress, sizeof(serverAddress)) == -1) {
-        qDebug() << "error conencting to server:" << strerror(errno);
-        throw;
+        QString exception("error connecting to server: ");
+        exception.append(strerror(errno));
+        throw exception;
     }
 
     QThread::start();
@@ -41,7 +44,7 @@ Client::Client(in_addr_t ip, uint16_t port, const QString& username) : socket_(0
 
 Client::~Client()
 {
-    shutdown(socket_, SHUT_RDWR);
+    close(socket_);
     running_ = false;
 
     // TODO: convert this to a mutex
@@ -72,7 +75,7 @@ void Client::run()
                 emit signal_displayMessage(chatMsg.username, chatMsg.data);
                 break;
             case kDisconnect:
-                shutdown(socket_, SHUT_RDWR);
+                close(socket_);
                 running_ = false;
                 break;
             case kError:
