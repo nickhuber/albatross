@@ -13,13 +13,13 @@ Server::Server(uint16_t port) : socket_(0), port_(port), backlog_(5), running_(t
 
     if ((socket_ = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1) {
         qDebug() << "error creating server socket:" << strerror(errno);
-        throw "error";
+        throw;
     }
 
     int arg = 1;
     if (setsockopt (socket_, SOL_SOCKET, SO_REUSEADDR, &arg, sizeof(arg)) == -1) {
         qDebug() << "error setting up socket:" << strerror(errno);
-        throw "error";
+        throw;
     }
 
     sockaddr_in listenTo;
@@ -31,12 +31,12 @@ Server::Server(uint16_t port) : socket_(0), port_(port), backlog_(5), running_(t
     if (bind(socket_, (sockaddr*) &listenTo, sizeof(listenTo)) == -1) {
         qDebug() << listenTo.sin_addr.s_addr << listenTo.sin_family << listenTo.sin_port << socket_;
         qDebug() << "error binding server socket:" << strerror(errno);
-        throw "error";
+        throw;
     }
 
     if (listen(socket_, backlog_) == -1) {
         qDebug() << "error listening on server socket:" << strerror(errno);
-        throw "error";
+        throw;
     }
 
 
@@ -117,17 +117,25 @@ void Server::run() {
                 switch (readMsg(currentClientSocket, chatMsg)) {
                 case kSuccess:
                     qDebug() << chatMsg.data;
-                    for (int j = 0; j <= maxIndex; j++) {
-                        if (client[j] == -1) {
-                            continue;
-                        }
-                        if (client[j] == currentClientSocket) {
-                            continue;
-                        }
-                        qDebug() << "sending";
-                        sendMsg(client[j], chatMsg);
 
+                    switch (chatMsg.type) {
+                    case kChat:
+                        for (int j = 0; j <= maxIndex; j++) {
+                            if (client[j] == -1) {
+                                continue;
+                            }
+                            if (client[j] == currentClientSocket) {
+                                continue;
+                            }
+                            qDebug() << "sending";
+                            sendMsg(client[j], chatMsg);
+
+                        }
+                        break;
+                    case kUsername:
+                        break;
                     }
+
                     break;
                 case kDisconnect:
                     qDebug() << "connection closed";

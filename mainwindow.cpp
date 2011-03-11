@@ -9,6 +9,7 @@
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
 
     ui->setupUi(this);
+
     setClientGuiVisible(true);
 
     setWindowIcon(QIcon(":/albatross.png"));
@@ -35,7 +36,7 @@ void MainWindow::slot_start() {
 
     try {
         server_ = new Server(port);
-    } catch (const char*) {
+    } catch (...) {
         delete server_;
         return;
     }
@@ -73,7 +74,7 @@ void MainWindow::slot_connect() {
 
     try {
         client_ = new Client(ip, port, ui->usernameLineEdit->text());
-    } catch (const char*) {
+    } catch (...) {
         delete client_;
         return;
     }

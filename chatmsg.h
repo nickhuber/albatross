@@ -19,12 +19,13 @@ enum MsgType {
   */
 struct ChatMsg {
     int size;         /**< The size of this message's data. */
-    MsgType type;         /**< The type of this message. */
-    const char* data;     /**< The data of this message. */
+    MsgType type;     /**< The type of this message. */
+    const char* data; /**< The data of this message. */
 };
 
 /**
   Possible return values for the readMsg function.
+  @author Nick Huber
   */
 enum return_readMsg {
     kSuccess,    /**< Message was successfully read. */
@@ -37,7 +38,7 @@ enum return_readMsg {
   @param socket The socket to read from.
   @param chatMsg The chatMsg to store the results into.
   @return The result of the read operation as defined in return_readMsg.
-  @author Nick
+  @author Nick Huber
   */
 return_readMsg readMsg(int socket, ChatMsg& chatMsg);
 
@@ -46,6 +47,7 @@ return_readMsg readMsg(int socket, ChatMsg& chatMsg);
   @param socket The socket to send over.
   @param chatMsg The data to send.
   @return Whether or not the data was able to be sent.
+  @author Nick Huber
   */
 bool sendMsg(int socket, const ChatMsg& chatMsg);
 

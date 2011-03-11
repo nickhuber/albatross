@@ -15,7 +15,7 @@ Client::Client(in_addr_t ip, uint16_t port, const QString& username) : socket_(0
 
     if ((socket_ = socket(PF_INET, SOCK_STREAM, 0)) == -1) {
         qDebug() << "error setting up socket:" << strerror(errno);
-        throw "error";
+        throw;
     }
 
     serverAddress.sin_family = AF_INET;
@@ -24,8 +24,10 @@ Client::Client(in_addr_t ip, uint16_t port, const QString& username) : socket_(0
 
     if (::connect(socket_, (sockaddr*) &serverAddress, sizeof(serverAddress)) == -1) {
         qDebug() << "error conencting to server:" << strerror(errno);
-        throw "error";
+        throw;
     }
+
+    sendMsg(kUsername, username.size() + 1, username.toStdString().c_str());
 
     QThread::start();
 }
