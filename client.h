@@ -1,8 +1,15 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
+#ifndef _WIN32
 #include <arpa/inet.h>
 #include <sys/types.h>
+#endif
+
+#ifdef _WIN32
+#include <winsock2.h>
+#endif
+
 #include <stdint.h>
 #include <QString>
 #include <QThread>

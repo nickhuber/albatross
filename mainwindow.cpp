@@ -1,4 +1,12 @@
+
+#ifndef _WIN32
 #include <arpa/inet.h>
+#endif
+
+#ifdef _WIN32
+#include <winsock2.h>
+#endif
+
 #include <QDebug>
 
 #include "mainwindow.h"
@@ -60,6 +68,12 @@ void MainWindow::slot_connect() {
     bool validNum;
     in_addr_t ip;
     uint16_t port;
+
+    if (ui->usernameLineEdit->text().size() == 0) {
+        qDebug() << "No username entered";
+        return;
+    }
+
 
     if ((ip = inet_addr(ui->serverIPLineEdit->text().toAscii())) == INADDR_NONE) {
         qDebug() << "Bad IP address";

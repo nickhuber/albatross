@@ -1,5 +1,11 @@
+#ifndef _WIN32
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#endif
+
+#ifdef _WIN32
+#include <winsock2.h>
+#endif
 
 // debugging
 #include <QDebug>

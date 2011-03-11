@@ -1,5 +1,12 @@
+#ifndef _WIN32
 #include <sys/socket.h>
 #include <netinet/in.h>
+#endif
+
+#ifdef _WIN32
+#include <winsock2.h>
+#endif
+
 #include <stdint.h>
 
 // debugging
