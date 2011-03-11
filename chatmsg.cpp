@@ -104,6 +104,12 @@ return_readMsg readMsg(int socket, ChatMsg& chatMsg) {
     while ((n = recv(socket, buffer, bytes_to_read, 0)) > 0) {
         buffer += n;
         bytes_to_read -= n;
+#ifdef _WIN32
+        // since windows doesn't recv async, this gets it past this point.
+        if (bytes_to_read == 0) {
+            break;
+        }
+#endif
     }
 
     if (n == -1) {
@@ -116,6 +122,7 @@ return_readMsg readMsg(int socket, ChatMsg& chatMsg) {
     return kSuccess;
 }
 
+#ifndef _WIN32
 bool sendMsg(int socket, const ChatMsg& chatMsg) {
     if (send(socket, (void*) &chatMsg.size, sizeof(chatMsg.size), 0) == -1) {
         qDebug() << "error sending:" << strerror(errno);
@@ -139,3 +146,30 @@ bool sendMsg(int socket, const ChatMsg& chatMsg) {
     }
     return true;
 }
+#endif
+
+#ifdef _WIN32
+bool sendMsg(int socket, const ChatMsg& chatMsg) {
+    if (send(socket, (const char*) &chatMsg.size, sizeof(chatMsg.size), 0) == -1) {
+        qDebug() << "error sending:" << strerror(errno);
+        return false;
+    }
+    if (send(socket, (const char*) &chatMsg.nameSize, sizeof(chatMsg.nameSize), 0) == -1) {
+        qDebug() << "error sending:" << strerror(errno);
+        return false;
+    }
+    if (send(socket, (const char*) chatMsg.username, chatMsg.nameSize, 0) == -1) {
+        qDebug() << "error sending:" << strerror(errno);
+        return false;
+    }
+    if (send(socket, (const char*) &chatMsg.type, sizeof(chatMsg.type), 0) == -1) {
+        qDebug() << "error sending:" << strerror(errno);
+        return false;
+    }
+    if (send(socket, (const char*) chatMsg.data, chatMsg.size, 0) == -1) {
+        qDebug() << "error sending:" << strerror(errno);
+        return false;
+    }
+    return true;
+}
+#endif

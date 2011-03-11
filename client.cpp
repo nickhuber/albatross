@@ -5,6 +5,7 @@
 
 #ifdef _WIN32
 #include <winsock2.h>
+#define SHUT_RDWR 2 // TODO: this should be SD_BOTH but that won't work
 #endif
 
 #include <stdint.h>

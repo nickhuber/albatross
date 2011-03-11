@@ -7,6 +7,7 @@
 #endif
 
 #ifdef _WIN32
+typedef unsigned int in_addr_t;
 #include <winsock2.h>
 #endif
 

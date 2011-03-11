@@ -5,6 +5,8 @@
 
 #ifdef _WIN32
 #include <winsock2.h>
+#define SHUT_RDWR 2 // TODO: this should be SD_BOTH but that won't work
+typedef int socklen_t;
 #endif
 
 // debugging
@@ -23,13 +25,13 @@ Server::Server(uint16_t port) : socket_(0), port_(port), backlog_(5), running_(t
     }
 
     int arg = 1;
-    if (setsockopt (socket_, SOL_SOCKET, SO_REUSEADDR, &arg, sizeof(arg)) == -1) {
+    if (setsockopt (socket_, SOL_SOCKET, SO_REUSEADDR, (char*) &arg, sizeof(arg)) == -1) {
         qDebug() << "error setting up socket:" << strerror(errno);
         throw;
     }
 
     sockaddr_in listenTo;
-    bzero((char *) &listenTo, sizeof(listenTo));
+    memset((char *) &listenTo, 0, sizeof(listenTo));
     listenTo.sin_family = AF_INET;
     listenTo.sin_port = port_;
     listenTo.sin_addr.s_addr = htonl(INADDR_ANY);

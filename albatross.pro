@@ -20,7 +20,7 @@ macx {
     ICON = albatross.icns
 }
 
-winnt {
+win32 {
     RC_FILE = albatross.rc
 }
 
@@ -42,3 +42,7 @@ HEADERS  += mainwindow.h \
 FORMS    += mainwindow.ui
 
 RESOURCES += icon.qrc
+
+win32 {
+    LIBS += -lwsock32
+}

@@ -74,7 +74,6 @@ void MainWindow::slot_connect() {
         return;
     }
 
-
     if ((ip = inet_addr(ui->serverIPLineEdit->text().toAscii())) == INADDR_NONE) {
         qDebug() << "Bad IP address";
         return;
@@ -88,12 +87,11 @@ void MainWindow::slot_connect() {
 
     try {
         client_ = new Client(ip, port, ui->usernameLineEdit->text());
-        connect(client_, SIGNAL(signal_displayMessage(QString,QString)), SLOT(slot_displayMessage(QString,QString)));
     } catch (...) {
-        disconnect(client_);
         delete client_;
         return;
     }
+    connect(client_, SIGNAL(signal_displayMessage(QString,QString)), SLOT(slot_displayMessage(QString,QString)));
 
     setClientGuiVisible(false);
 
@@ -105,7 +103,7 @@ void MainWindow::slot_connect() {
 
 void MainWindow::slot_disconnect() {
 
-    disconnect(client_);
+    disconnect(client_, SIGNAL(signal_displayMessage(QString,QString)));
     delete client_;
 
     setClientGuiVisible(true);
