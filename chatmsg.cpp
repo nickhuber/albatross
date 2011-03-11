@@ -36,7 +36,7 @@ return_readMsg readMsg(int socket, ChatMsg& chatMsg)
         return kDisconnect;
     }
 
-    chatMsg.size = (int) * buffer_head;
+    chatMsg.size = (int) *buffer_head;
     delete[] buffer_head;
     // read the nameSize
     bytes_to_read = sizeof(chatMsg.nameSize);
@@ -53,7 +53,7 @@ return_readMsg readMsg(int socket, ChatMsg& chatMsg)
         return kError;
     }
 
-    chatMsg.nameSize = (int) * buffer_head;
+    chatMsg.nameSize = (int) *buffer_head;
     delete[] buffer_head;
     // read the username
     bytes_to_read = chatMsg.nameSize;
@@ -86,7 +86,7 @@ return_readMsg readMsg(int socket, ChatMsg& chatMsg)
         return kError;
     }
 
-    chatMsg.type = (MsgType) * buffer_head;
+    chatMsg.type = (MsgType) *buffer_head;
     delete[] buffer_head;
     // read the message data
     bytes_to_read = chatMsg.size;
