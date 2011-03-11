@@ -30,7 +30,8 @@ SOURCES += main.cpp\
     mainwindow.cpp \
     server.cpp \
     client.cpp \
-    connection.cpp
+    connection.cpp \
+    chatmsg.cpp
 
 HEADERS  += mainwindow.h \
     server.h \

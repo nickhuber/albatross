@@ -5,8 +5,9 @@
 #include <sys/types.h>
 #include <stdint.h>
 #include <QString>
+#include <QThread>
 
-class Client
+class Client : public QThread
 {
 public:
     /**
@@ -28,6 +29,9 @@ public:
     void sendMsg(const QString& msg);
 private:
     int socket_;
+
+protected:
+    void run();
 };
 
 #endif // CLIENT_H

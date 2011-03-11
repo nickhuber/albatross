@@ -3,7 +3,7 @@
 #include <stdint.h>
 
 // debugging
-#include <QDebug>
+#include <qDebug>
 #include <errno.h>
 #include <string.h>
 
@@ -22,7 +22,7 @@ Client::Client(in_addr_t ip, uint16_t port, const QString& username) {
     serverAddress.sin_addr.s_addr = ip;
     serverAddress.sin_port = port;
 
-    if (connect(socket_, (sockaddr*) &serverAddress, sizeof(serverAddress)) == -1) {
+    if (::connect(socket_, (sockaddr*) &serverAddress, sizeof(serverAddress)) == -1) {
         qDebug() << "error conencting to server:" << strerror(errno);
         throw "error";
     }
@@ -37,7 +37,7 @@ void Client::sendMsg(const QString &msg) {
 
     chatMsg.size = msg.size() + 1;
     chatMsg.data = msg.toStdString().c_str();
-    chatMsg.type = CHAT;
+    chatMsg.type = kChat;
     if (send(socket_, (void*) &chatMsg.size, sizeof(chatMsg.size), 0) == -1) {
         qDebug() << "error sending:" << strerror(errno);
     }
@@ -46,5 +46,11 @@ void Client::sendMsg(const QString &msg) {
     }
     if (send(socket_, (void*) chatMsg.data, chatMsg.size, 0) == -1) {
         qDebug() << "error sending:" << strerror(errno);
+    }
+}
+
+void Client::run() {
+    while (true) {
+
     }
 }

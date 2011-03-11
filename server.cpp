@@ -2,13 +2,12 @@
 #include <arpa/inet.h>
 
 // debugging
-#include <QDebug>
+#include <qDebug>
 #include <errno.h>
 #include <string.h>
 
 #include "server.h"
 #include "chatmsg.h"
-
 
 Server::Server(uint16_t port) : socket_(0), port_(port), backlog_(5), running_(true) {
 
@@ -54,18 +53,17 @@ Server::~Server() {
 }
 
 void Server::run() {
-    int i, maxi, nready, bytes_to_read;
-    int new_sd, sockfd, maxfd, client[FD_SETSIZE];
+    int clientIndex, maxIndex, numReady;
+    int newClientSocket, currentClientSocket, maxfd, client[FD_SETSIZE];
     socklen_t client_len;
-    struct sockaddr_in client_addr;
-    ssize_t n;
+    sockaddr_in client_addr;
     fd_set rset, allset;
 
     maxfd	= socket_;	// initialize
-    maxi	= -1;		// index into client[] array
+    maxIndex	= -1;		// index into client[] array
 
-    for (i = 0; i < FD_SETSIZE; i++) {
-        client[i] = -1;             // -1 indicates available entry
+    for (clientIndex = 0; clientIndex < FD_SETSIZE; clientIndex++) {
+        client[clientIndex] = -1;             // -1 indicates available entry
     }
 
     FD_ZERO(&allset);
@@ -73,123 +71,67 @@ void Server::run() {
 
     while (true) {
         rset = allset;               // structure assignment
-        nready = select(maxfd + 1, &rset, NULL, NULL, NULL);
+        numReady = select(maxfd + 1, &rset, NULL, NULL, NULL);
 
         if (FD_ISSET(socket_, &rset)) {
             client_len = sizeof(client_addr);
-            if ((new_sd = accept(socket_, (struct sockaddr *) &client_addr, &client_len)) == -1) {
+            if ((newClientSocket = accept(socket_, (sockaddr *) &client_addr, &client_len)) == -1) {
                 qDebug() << "accept error:" << strerror(errno);
                 return; // TODO: inform main window of failure.
             }
 
             printf(" Remote Address:  %s\n", inet_ntoa(client_addr.sin_addr));
 
-            for (i = 0; i < FD_SETSIZE; i++) {
-                if (client[i] < 0) {
-                    client[i] = new_sd;	// save descriptor
+            for (clientIndex = 0; clientIndex < FD_SETSIZE; clientIndex++) {
+                if (client[clientIndex] < 0) {
+                    client[clientIndex] = newClientSocket;	// save descriptor
                     break;
                 }
             }
-            if (i == FD_SETSIZE) {
-                printf ("Too many clients\n");
-                exit(1);
+            if (clientIndex == FD_SETSIZE) {
+                qDebug() << "Too many clients";
             }
 
-            FD_SET (new_sd, &allset);     // add new descriptor to set
-            if (new_sd > maxfd) {
-                maxfd = new_sd;	// for select
+            FD_SET (newClientSocket, &allset);     // add new descriptor to set
+            if (newClientSocket > maxfd) {
+                maxfd = newClientSocket;	// for select
             }
 
-            if (i > maxi) {
-                maxi = i;	// new max index in client[] array
+            if (clientIndex > maxIndex) {
+                maxIndex = clientIndex;	 // new max index in client[] array
             }
 
-            if (--nready <= 0) {
+            if (--numReady <= 0) {
                 continue;	// no more readable descriptors
             }
         }
 
-        for (int i = 0; i <= maxi; i++)	 {
-            if ((sockfd = client[i]) < 0) {
+        for (int i = 0; i <= maxIndex; i++)	 {
+            if ((currentClientSocket = client[i]) < 0) {
                 continue;
             }
 
-            if (FD_ISSET(sockfd, &rset)) {
+            if (FD_ISSET(currentClientSocket, &rset)) {
                 ChatMsg chatMsg;
-                bytes_to_read = sizeof(chatMsg.size);
-                char* buffer = new char[bytes_to_read];
-                char* buffer_head = buffer;
 
-                // read the message size
-
-                while ((n = read(sockfd, buffer, bytes_to_read)) > 0) {
-                    buffer += n;
-                    bytes_to_read -= n;
-                }
-
-                if (n == -1) {
-                    qDebug() << "error reading:" << strerror(errno);
+                switch (readMsg(currentClientSocket, chatMsg)) {
+                case kSuccess:
+                    qDebug() << chatMsg.data;
                     break;
-                }
-
-                // extra check on first read, if we read nothing then it was a disconnect
-                if (n == 0 && bytes_to_read != 0) {
-                    printf(" Remote Address:  %s closed connection\n", inet_ntoa(client_addr.sin_addr));
-                    close(sockfd);
-                    FD_CLR(sockfd, &allset);
+                case kDisconnect:
+                    qDebug() << "connection closed";
+                    close(currentClientSocket);
+                    FD_CLR(currentClientSocket, &allset);
                     client[i] = -1;
                     break;
-                }
-
-                chatMsg.size = (size_t) *buffer_head;
-
-                // read the message type
-
-                delete[] buffer_head;
-
-                bytes_to_read = sizeof(chatMsg.type);
-                buffer = new char[bytes_to_read];
-                buffer_head = buffer;
-
-                while ((n = read(sockfd, buffer, bytes_to_read)) > 0) {
-                    buffer += n;
-                    bytes_to_read -= n;
-                }
-
-                if (n == -1) {
-                    qDebug() << "error reading:" << strerror(errno);
+                case kError:
                     break;
                 }
 
-                chatMsg.type = (MsgType) *buffer_head;
-
-                // read the message data
-
-                delete[] buffer_head;
-
-                bytes_to_read = chatMsg.size;
-                buffer = new char[bytes_to_read];
-                buffer_head = buffer;
-
-                while ((n = read(sockfd, buffer, bytes_to_read)) > 0) {
-                    buffer += n;
-                    bytes_to_read -= n;
-                }
-
-                if (n == -1) {
-                    qDebug() << "error reading:" << strerror(errno);
-                    break;
-                }
-
-                chatMsg.data = buffer_head;
-
-                qDebug() << chatMsg.data;
-
-                if (--nready <= 0) {
+                if (--numReady <= 0) {
                     break;        // no more readable descriptors
                 }
             }
         }
     }
-
 }

@@ -4,11 +4,11 @@
 #include <sys/types.h>
 
 /**
-  Enumeration of the various possible message types.
+  The various possible message types.
   @author Nick Huber
   */
 enum MsgType {
-    CHAT
+    kChat /**< Msg is a textual chat msg. */
 };
 
 /**
@@ -21,5 +21,23 @@ struct ChatMsg {
     const char* username; /**< Name of user who sent this message. */
     const char* data;  /**< The data of this message. */
 };
+
+/**
+  Possible return values for the readMsg function.
+  */
+enum return_readMsg {
+    kSuccess, /**< Message was successfully read. */
+    kDisconnect, /**< Message was actually a disconnect. */
+    kError /**< Message failed and resulted in an error. */
+};
+
+/**
+  Attemps to read a message from the specified socket.
+  @param socket The socket to read from.
+  @param chatMsg The chatMsg to store the results into.
+  @return The result of the read operation as defined in return_readMsg.
+  @author Nick
+  */
+return_readMsg readMsg(int socket, ChatMsg& chatMsg);
 
 #endif // CHATMSG_H
