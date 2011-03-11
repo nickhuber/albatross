@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Albatross Qt Project File
+# Albatross Chat Qt Project File
 #
 #-------------------------------------------------
 
@@ -24,7 +24,7 @@ win32 {
     RC_FILE = albatross.rc
 }
 
-# code stuff
+# source code
 
 SOURCES += main.cpp\
     mainwindow.cpp \
@@ -42,6 +42,8 @@ HEADERS  += mainwindow.h \
 FORMS    += mainwindow.ui
 
 RESOURCES += icon.qrc
+
+# extra windows required libaries (assuming mingw)
 
 win32 {
     LIBS += -lwsock32
