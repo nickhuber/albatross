@@ -117,6 +117,17 @@ void Server::run() {
                 switch (readMsg(currentClientSocket, chatMsg)) {
                 case kSuccess:
                     qDebug() << chatMsg.data;
+                    for (int j = 0; j <= maxIndex; j++) {
+                        if (client[j] == -1) {
+                            continue;
+                        }
+                        if (client[j] == currentClientSocket) {
+                            continue;
+                        }
+                        qDebug() << "sending";
+                        sendMsg(client[j], chatMsg);
+
+                    }
                     break;
                 case kDisconnect:
                     qDebug() << "connection closed";

@@ -74,3 +74,19 @@ return_readMsg readMsg(int socket, ChatMsg& chatMsg) {
 
     return kSuccess;
 }
+
+bool sendMsg(int socket, const ChatMsg& chatMsg) {
+    if (send(socket, (void*) &chatMsg.size, sizeof(chatMsg.size), 0) == -1) {
+        qDebug() << "error sending:" << strerror(errno);
+        return false;
+    }
+    if (send(socket, (void*) &chatMsg.type, sizeof(chatMsg.type), 0) == -1) {
+        qDebug() << "error sending:" << strerror(errno);
+        return false;
+    }
+    if (send(socket, (void*) chatMsg.data, chatMsg.size, 0) == -1) {
+        qDebug() << "error sending:" << strerror(errno);
+        return false;
+    }
+    return true;
+}

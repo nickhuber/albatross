@@ -26,9 +26,10 @@ public:
       */
     ~Client();
 
-    void sendMsg(const QString& msg);
+    void sendTextMsg(const QString& msg);
 private:
     int socket_;
+    bool running_;
 
 protected:
     void run();

@@ -99,7 +99,7 @@ void MainWindow::slot_disconnect() {
 }
 
 void MainWindow::slot_send() {
-    client_->sendMsg(ui->sendLineEdit->text());
+    client_->sendTextMsg(ui->sendLineEdit->text());
 }
 
 void MainWindow::setClientGuiVisible(bool visible) {
@@ -111,7 +111,7 @@ void MainWindow::setClientGuiVisible(bool visible) {
     ui->portLineEdit->setVisible(visible);
     ui->usernameLineEdit->setEnabled(visible);
 
-    ui->receivedMsgScrollArea->setVisible(!visible);
+    ui->chatMessagesText->setVisible(!visible);
     ui->sendLineEdit->setVisible(!visible);
     ui->sendPushButton->setVisible(!visible);
 }

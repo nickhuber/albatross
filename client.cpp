@@ -26,31 +26,40 @@ Client::Client(in_addr_t ip, uint16_t port, const QString& username) {
         qDebug() << "error conencting to server:" << strerror(errno);
         throw "error";
     }
+
+    QThread::start();
 }
 
 Client::~Client() {
     close(socket_);
+    running_ = false;
+    // TODO: convert this to a mutex
+    while(isRunning()) { // wait for thread to exit
+        ;
+    }
 }
 
-void Client::sendMsg(const QString &msg) {
+void Client::sendTextMsg(const QString& msg) {
     ChatMsg chatMsg;
-
     chatMsg.size = msg.size() + 1;
     chatMsg.data = msg.toStdString().c_str();
     chatMsg.type = kChat;
-    if (send(socket_, (void*) &chatMsg.size, sizeof(chatMsg.size), 0) == -1) {
-        qDebug() << "error sending:" << strerror(errno);
-    }
-    if (send(socket_, (void*) &chatMsg.type, sizeof(chatMsg.type), 0) == -1) {
-        qDebug() << "error sending:" << strerror(errno);
-    }
-    if (send(socket_, (void*) chatMsg.data, chatMsg.size, 0) == -1) {
-        qDebug() << "error sending:" << strerror(errno);
-    }
+    sendMsg(socket_, chatMsg);
 }
 
 void Client::run() {
-    while (true) {
-
+    ChatMsg chatMsg;
+    while (running_) {
+        switch (readMsg(socket_, chatMsg)) {
+        case kSuccess:
+            qDebug() << chatMsg.data;
+            break;
+        case kDisconnect:
+            qDebug() << "connection closed";
+            close(socket_);
+            break;
+        case kError:
+            break;
+        }
     }
 }

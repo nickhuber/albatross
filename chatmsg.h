@@ -2,6 +2,7 @@
 #define CHATMSG_H
 
 #include <sys/types.h>
+#include <QString>
 
 /**
   The various possible message types.
@@ -16,19 +17,19 @@ enum MsgType {
   @author Nick Huber
   */
 struct ChatMsg {
-    size_t size; /**< The size of this message. */
-    MsgType type;/**< The type of this message. */
+    size_t size;          /**< The size of this message. */
+    MsgType type;         /**< The type of this message. */
     const char* username; /**< Name of user who sent this message. */
-    const char* data;  /**< The data of this message. */
+    const char* data;     /**< The data of this message. */
 };
 
 /**
   Possible return values for the readMsg function.
   */
 enum return_readMsg {
-    kSuccess, /**< Message was successfully read. */
+    kSuccess,    /**< Message was successfully read. */
     kDisconnect, /**< Message was actually a disconnect. */
-    kError /**< Message failed and resulted in an error. */
+    kError       /**< Message failed and resulted in an error. */
 };
 
 /**
@@ -39,5 +40,13 @@ enum return_readMsg {
   @author Nick
   */
 return_readMsg readMsg(int socket, ChatMsg& chatMsg);
+
+/**
+  Attempts to send a message over the socket as specified by the ChatMsg.
+  @param socket The socket to send over.
+  @param chatMsg The data to send.
+  @return Whether or not the data was able to be sent.
+  */
+bool sendMsg(int socket, const ChatMsg& chatMsg);
 
 #endif // CHATMSG_H
