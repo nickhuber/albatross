@@ -9,6 +9,8 @@
 
 #include <QDebug>
 #include <QColor>
+#include <QFile>
+#include <QTextStream>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -139,6 +141,13 @@ void MainWindow::slot_displayMessage(const QString& username, const QString& mes
     QColor colour(sum % 255, sum * 3 % 255, sum * 7 % 255);
 
     ui->chatMessagesText->append("<span style='color:" + colour.name() + "'>" + username + "</span>" + ": " + message);
+
+    if (ui->saveSessionCheckBox->checkState() == Qt::Checked) {
+        QFile file("log.txt");
+        file.open(QFile::WriteOnly | QFile::Append);
+        QTextStream stream(&file);
+        stream << username << ": " << message << "\r\n";
+    }
 }
 
 void MainWindow::slot_connectedClient(const QString &address)
