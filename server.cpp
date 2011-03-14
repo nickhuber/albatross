@@ -17,7 +17,8 @@ typedef int socklen_t;
 #include "server.h"
 #include "chatmsg.h"
 
-Server::Server(uint16_t port) : socket_(0), port_(port), backlog_(5), running_(true) {
+Server::Server(uint16_t port)
+    : socket_(0), port_(port), backlog_(5), running_(true) {
 
     if ((socket_ = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1) {
         QString exception("error creating server socket: ");

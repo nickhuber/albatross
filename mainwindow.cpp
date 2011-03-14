@@ -104,6 +104,9 @@ void MainWindow::slot_connect() {
     // when a message is received, print to the output
     connect(client_, SIGNAL(signal_messageReceived(QString, QString)), SLOT(slot_displayMessage(QString, QString)));
 
+    // if the server shuts down, disconnect the client
+    connect(client_, SIGNAL(signal_disconnected()), SLOT(slot_disconnect()));
+
     setClientGuiVisible(false);
     ui->connectPushButton->setText(tr("Disconnect"));
     ui->tabWidget->setTabEnabled(1, false);
@@ -114,6 +117,7 @@ void MainWindow::slot_connect() {
 void MainWindow::slot_disconnect() {
 
     disconnect(client_, SIGNAL(signal_messageReceived(QString, QString)));
+    disconnect(client_, SIGNAL(signal_disconnected()));
     delete client_;
     setClientGuiVisible(true);
     ui->connectPushButton->setText(tr("Connect"));

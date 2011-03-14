@@ -52,6 +52,7 @@ signals:
       @author Nick Huber
       */
     void signal_messageReceived(const QString& username, const QString& message) const;
+    void signal_disconnected();
 
 protected:
     /**

@@ -72,6 +72,7 @@ void Client::run() {
             case kDisconnect:
                 close(socket_);
                 running_ = false;
+                emit signal_disconnected();
                 break;
             case kError:
                 break;
