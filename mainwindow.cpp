@@ -129,10 +129,13 @@ void MainWindow::slot_displayMessage(const QString& username, const QString& mes
 {
     int sum = 0;
 
+    // generate a number from the username
     for (int i = 0; i < username.size(); i++) {
         sum += username[i].toAscii();
     }
 
+    // Construct a colour from that number.
+    // 3 and 7 are numbers just to make sure the colour isnt always gray
     QColor colour(sum % 255, sum * 3 % 255, sum * 7 % 255);
 
     ui->chatMessagesText->append("<span style='color:" + colour.name() + "'>" + username + "</span>" + ": " + message);
