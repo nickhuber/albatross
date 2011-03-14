@@ -8,6 +8,7 @@
 #endif
 
 #include <QDebug>
+#include <QColor>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -23,6 +24,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(ui->startPushButton, SIGNAL(clicked()), SLOT(slot_start()));
     connect(ui->connectPushButton, SIGNAL(clicked()), SLOT(slot_connect()));
     connect(ui->sendPushButton, SIGNAL(clicked()), SLOT(slot_send()));
+    connect(ui->sendLineEdit, SIGNAL(returnPressed()), SLOT(slot_send()));
 }
 
 MainWindow::~MainWindow()
@@ -119,12 +121,21 @@ void MainWindow::slot_disconnect()
 void MainWindow::slot_send()
 {
     QString message = ui->sendLineEdit->text();
+    ui->sendLineEdit->clear();
     client_->sendMsg(kChat, message.size() + 1, message.toStdString().c_str());
 }
 
 void MainWindow::slot_displayMessage(const QString& username, const QString& message)
 {
-    ui->chatMessagesText->append(username + ": " + message);
+    int sum = 0;
+
+    for (int i = 0; i < username.size(); i++) {
+        sum += username[i].toAscii();
+    }
+
+    QColor colour(sum % 255, sum * 3 % 255, sum * 7 % 255);
+
+    ui->chatMessagesText->append("<span style='color:" + colour.name() + "'>" + username + "</span>" + ": " + message);
 }
 
 void MainWindow::slot_connectedClient(const QString &address)
