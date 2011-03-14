@@ -12,8 +12,7 @@
 
 #include "chatmsg.h"
 
-return_readMsg readMsg(int socket, ChatMsg& chatMsg)
-{
+return_readMsg readMsg(int socket, ChatMsg& chatMsg) {
     int bytes_to_read = sizeof(chatMsg.size);
     int n;
     char* buffer = new char[bytes_to_read];
@@ -116,8 +115,7 @@ return_readMsg readMsg(int socket, ChatMsg& chatMsg)
 }
 
 #ifndef _WIN32
-bool sendMsg(int socket, const ChatMsg& chatMsg)
-{
+bool sendMsg(int socket, const ChatMsg& chatMsg) {
     if (send(socket, (void*) &chatMsg.size, sizeof(chatMsg.size), 0) == -1) {
         qDebug() << "error sending:" << strerror(errno);
         return false;
@@ -148,8 +146,7 @@ bool sendMsg(int socket, const ChatMsg& chatMsg)
 #endif
 
 #ifdef _WIN32
-bool sendMsg(int socket, const ChatMsg& chatMsg)
-{
+bool sendMsg(int socket, const ChatMsg& chatMsg) {
     if (send(socket, (const char*) &chatMsg.size, sizeof(chatMsg.size), 0) == -1) {
         qDebug() << "error sending:" << strerror(errno);
         return false;

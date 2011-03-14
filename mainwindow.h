@@ -75,6 +75,15 @@ public slots:
     void slot_displayMessage(const QString& username, const QString& message);
 
     /**
+      Slot for writing a message to a file. appends into log.txt in the current directory.
+
+      @param username The sender's username.
+      @param message The sender's message.
+      @author Nick Huber
+      */
+    void slot_saveToFile(const QString& username, const QString& message);
+
+    /**
       Slot for when a client is connected to update the server list.
 
       @param address The client's IP address.

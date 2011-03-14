@@ -45,13 +45,13 @@ private:
 
 signals:
     /**
-      Signal to display a message for the client, showing username: message.
+      Signal for the client received a message.
 
       @param username The username to show.
       @param message The message to show.
       @author Nick Huber
       */
-    void signal_displayMessage(const QString& username, const QString& message) const;
+    void signal_messageReceived(const QString& username, const QString& message) const;
 
 protected:
     /**

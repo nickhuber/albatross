@@ -32,13 +32,11 @@ SOURCES += main.cpp\
     mainwindow.cpp \
     server.cpp \
     client.cpp \
-    connection.cpp \
     chatmsg.cpp
 
 HEADERS  += mainwindow.h \
     server.h \
     client.h \
-    connection.h \
     chatmsg.h
 
 FORMS    += mainwindow.ui

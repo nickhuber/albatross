@@ -17,8 +17,8 @@
 #include "server.h"
 #include "client.h"
 
-MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWindow)
-{
+MainWindow::MainWindow(QWidget* parent)
+    : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
     setClientGuiVisible(true);
     setWindowIcon(QIcon(":/albatross.png"));
@@ -29,13 +29,11 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(ui->sendLineEdit, SIGNAL(returnPressed()), SLOT(slot_send()));
 }
 
-MainWindow::~MainWindow()
-{
+MainWindow::~MainWindow() {
     delete ui;
 }
 
-void MainWindow::slot_start()
-{
+void MainWindow::slot_start() {
     bool validNum;
     uint port;
     port = ui->portServerLineEdit->text().toUInt(&validNum);
@@ -60,8 +58,7 @@ void MainWindow::slot_start()
     connect(ui->startPushButton, SIGNAL(clicked()), SLOT(slot_stop()));
 }
 
-void MainWindow::slot_stop()
-{
+void MainWindow::slot_stop() {
     disconnect(server_, SIGNAL(signal_clientConnected(QString)));
     disconnect(server_, SIGNAL(signal_clientDisconnect(int)));
     delete server_;
@@ -71,8 +68,7 @@ void MainWindow::slot_stop()
     connect(ui->startPushButton, SIGNAL(clicked()), SLOT(slot_start()));
 }
 
-void MainWindow::slot_connect()
-{
+void MainWindow::slot_connect() {
     bool validNum;
     in_addr_t ip;
     uint16_t port;
@@ -101,7 +97,13 @@ void MainWindow::slot_connect()
         return;
     }
 
-    connect(client_, SIGNAL(signal_displayMessage(QString, QString)), SLOT(slot_displayMessage(QString, QString)));
+    // if the checkbox is set, save to a file.
+    if (ui->saveSessionCheckBox->checkState() == Qt::Checked) {
+        connect(client_, SIGNAL(signal_messageReceived(QString, QString)), SLOT(slot_saveToFile(QString, QString)));
+    }
+    // when a message is received, print to the output
+    connect(client_, SIGNAL(signal_messageReceived(QString, QString)), SLOT(slot_displayMessage(QString, QString)));
+
     setClientGuiVisible(false);
     ui->connectPushButton->setText(tr("Disconnect"));
     ui->tabWidget->setTabEnabled(1, false);
@@ -109,9 +111,9 @@ void MainWindow::slot_connect()
     connect(ui->connectPushButton, SIGNAL(clicked()), SLOT(slot_disconnect()));
 }
 
-void MainWindow::slot_disconnect()
-{
-    disconnect(client_, SIGNAL(signal_displayMessage(QString, QString)));
+void MainWindow::slot_disconnect() {
+
+    disconnect(client_, SIGNAL(signal_messageReceived(QString, QString)));
     delete client_;
     setClientGuiVisible(true);
     ui->connectPushButton->setText(tr("Connect"));
@@ -120,15 +122,13 @@ void MainWindow::slot_disconnect()
     connect(ui->connectPushButton, SIGNAL(clicked()), SLOT(slot_connect()));
 }
 
-void MainWindow::slot_send()
-{
+void MainWindow::slot_send() {
     QString message = ui->sendLineEdit->text();
     ui->sendLineEdit->clear();
     client_->sendMsg(kChat, message.size() + 1, message.toStdString().c_str());
 }
 
-void MainWindow::slot_displayMessage(const QString& username, const QString& message)
-{
+void MainWindow::slot_displayMessage(const QString& username, const QString& message) {
     int sum = 0;
 
     // generate a number from the username
@@ -141,17 +141,16 @@ void MainWindow::slot_displayMessage(const QString& username, const QString& mes
     QColor colour(sum % 255, sum * 3 % 255, sum * 7 % 255);
 
     ui->chatMessagesText->append("<span style='color:" + colour.name() + "'>" + username + "</span>" + ": " + message);
-
-    if (ui->saveSessionCheckBox->checkState() == Qt::Checked) {
-        QFile file("log.txt");
-        file.open(QFile::WriteOnly | QFile::Append);
-        QTextStream stream(&file);
-        stream << username << ": " << message << "\r\n";
-    }
 }
 
-void MainWindow::slot_connectedClient(const QString &address)
-{
+void MainWindow::slot_saveToFile(const QString& username, const QString& message) {
+    QFile file("log.txt");
+    file.open(QFile::WriteOnly | QFile::Append);
+    QTextStream stream(&file);
+    stream << username << ": " << message << "\r\n";
+}
+
+void MainWindow::slot_connectedClient(const QString &address) {
     ui->clientList->addItem(address);
 }
 
@@ -159,8 +158,8 @@ void MainWindow::slot_disconnectedClient(const int index) {
     ui->clientList->takeItem(index);
 }
 
-void MainWindow::setClientGuiVisible(bool visible)
-{
+void MainWindow::setClientGuiVisible(bool visible) {
+
     ui->saveSessionLabel->setVisible(visible);
     ui->saveSessionCheckBox->setVisible(visible);
     ui->serverIPLabel->setVisible(visible);
