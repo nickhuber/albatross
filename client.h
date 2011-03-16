@@ -1,3 +1,13 @@
+/**
+  @file
+
+  Everything related to the Client.
+
+  Works cross platform. Although there was a typedef and some include changes
+  required to get windows to cooperate.
+
+  */
+
 #ifndef CLIENT_H
 #define CLIENT_H
 
