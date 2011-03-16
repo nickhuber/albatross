@@ -1,3 +1,12 @@
+/**
+  @file
+
+  Everything related to the Server.
+
+  This theoretically works cross platform, although no Windows testing has been
+  done.
+  */
+
 #ifndef SERVER_H
 #define SERVER_H
 

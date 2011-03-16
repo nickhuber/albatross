@@ -1,3 +1,12 @@
+/**
+  @file
+
+  Everything related to the GUI.
+
+  Since this is all Qt based, there should be no platform-dependent code in this
+  section.
+  */
+
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
