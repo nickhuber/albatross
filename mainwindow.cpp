@@ -74,28 +74,43 @@ void MainWindow::slot_connect() {
     bool validNum;
     in_addr_t ip;
     uint16_t port;
+    bool success = true;
+
+    ui->ip_error->setText("");
+    ui->username_error->setText("");
+    ui->port_error->setText("");
+    ui->connect_error->setText("");
 
     if (ui->usernameLineEdit->text().size() == 0) {
-        qDebug() << "No username entered";
-        return;
+        ui->username_error->setText("Required");
+        success = false;
     }
 
-    if ((ip = inet_addr(ui->serverIPLineEdit->text().toAscii())) == INADDR_NONE) {
-        qDebug() << "Bad IP address";
-        return;
+    if ((ui->serverIPLineEdit->text().size() == 0)) {
+        ui->ip_error->setText("Required");
+        success = false;
+    } else if ((ip = inet_addr(ui->serverIPLineEdit->text().toAscii())) == INADDR_NONE) {
+        ui->ip_error->setText("Invalid");
+        success = false;
     }
 
     port = ui->portLineEdit->text().toUInt(&validNum);
+    if (ui->portLineEdit->text().size() == 0) {
+        ui->port_error->setText("Required");
+        success = false;
+    } else if (!validNum) {
+        ui->port_error->setText("Invalid");
+        success = false;
+    }
 
-    if (!validNum) {
-        qDebug() << "Bad port number";
+    if (!success) {
         return;
     }
 
     try {
         client_ = new Client(ip, htons(port), ui->usernameLineEdit->text());
     } catch (const QString& e) {
-        qDebug() << e;
+        ui->connect_error->setText(e);
         return;
     }
 
