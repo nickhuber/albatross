@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>302</width>
+    <width>353</width>
     <height>524</height>
    </rect>
   </property>
@@ -34,7 +34,7 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>302</width>
+      <width>351</width>
       <height>506</height>
      </rect>
     </property>
@@ -81,37 +81,11 @@
      <attribute name="title">
       <string>Client</string>
      </attribute>
-     <widget class="QLabel" name="port_error">
-      <property name="geometry">
-       <rect>
-        <x>236</x>
-        <y>100</y>
-        <width>62</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-     <widget class="QLabel" name="username_error">
-      <property name="geometry">
-       <rect>
-        <x>235</x>
-        <y>131</y>
-        <width>62</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
      <widget class="QLabel" name="connect_error">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>160</y>
+        <x>30</x>
+        <y>130</y>
         <width>211</width>
         <height>31</height>
        </rect>
@@ -123,63 +97,11 @@
        <bool>true</bool>
       </property>
      </widget>
-     <widget class="QLabel" name="ip_error">
-      <property name="geometry">
-       <rect>
-        <x>235</x>
-        <y>69</y>
-        <width>60</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-     <widget class="QLabel" name="portLabel">
-      <property name="geometry">
-       <rect>
-        <x>42</x>
-        <y>97</y>
-        <width>39</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Port #</string>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="serverIPLineEdit">
-      <property name="geometry">
-       <rect>
-        <x>89</x>
-        <y>65</y>
-        <width>144</width>
-        <height>22</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>127.0.0.1</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="serverIPLabel">
-      <property name="geometry">
-       <rect>
-        <x>27</x>
-        <y>65</y>
-        <width>54</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Server IP</string>
-      </property>
-     </widget>
      <widget class="QLabel" name="saveSessionLabel">
       <property name="geometry">
        <rect>
-        <x>1</x>
-        <y>39</y>
+        <x>4</x>
+        <y>9</y>
         <width>80</width>
         <height>16</height>
        </rect>
@@ -191,54 +113,18 @@
      <widget class="QCheckBox" name="saveSessionCheckBox">
       <property name="geometry">
        <rect>
-        <x>87</x>
-        <y>36</y>
+        <x>90</x>
+        <y>6</y>
         <width>19</width>
         <height>18</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="portLineEdit">
-      <property name="geometry">
-       <rect>
-        <x>89</x>
-        <y>97</y>
-        <width>144</width>
-        <height>22</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>8123</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="usernameLabel">
-      <property name="geometry">
-       <rect>
-        <x>18</x>
-        <y>129</y>
-        <width>63</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Username</string>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="usernameLineEdit">
-      <property name="geometry">
-       <rect>
-        <x>89</x>
-        <y>129</y>
-        <width>144</width>
-        <height>22</height>
        </rect>
       </property>
      </widget>
      <widget class="QPushButton" name="connectPushButton">
       <property name="geometry">
        <rect>
-        <x>15</x>
-        <y>190</y>
+        <x>25</x>
+        <y>160</y>
         <width>94</width>
         <height>32</height>
        </rect>
@@ -250,8 +136,8 @@
      <widget class="QTextBrowser" name="chatMessagesText">
       <property name="geometry">
        <rect>
-        <x>21</x>
-        <y>228</y>
+        <x>31</x>
+        <y>198</y>
         <width>254</width>
         <height>192</height>
        </rect>
@@ -260,8 +146,8 @@
      <widget class="QPushButton" name="sendPushButton">
       <property name="geometry">
        <rect>
-        <x>200</x>
-        <y>430</y>
+        <x>210</x>
+        <y>400</y>
         <width>73</width>
         <height>32</height>
        </rect>
@@ -273,12 +159,107 @@
      <widget class="QLineEdit" name="sendLineEdit">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>434</y>
+        <x>30</x>
+        <y>404</y>
         <width>181</width>
         <height>22</height>
        </rect>
       </property>
+     </widget>
+     <widget class="QWidget" name="">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>35</y>
+        <width>218</width>
+        <height>24</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QLabel" name="serverIPLabel">
+         <property name="text">
+          <string>Server IP</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="serverIPLineEdit">
+         <property name="text">
+          <string>127.0.0.1</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="ip_error">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="">
+      <property name="geometry">
+       <rect>
+        <x>45</x>
+        <y>67</y>
+        <width>203</width>
+        <height>24</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QLabel" name="portLabel">
+         <property name="text">
+          <string>Port #</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="portLineEdit">
+         <property name="text">
+          <string>8123</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="port_error">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="">
+      <property name="geometry">
+       <rect>
+        <x>21</x>
+        <y>99</y>
+        <width>227</width>
+        <height>24</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <item>
+        <widget class="QLabel" name="usernameLabel">
+         <property name="text">
+          <string>Username</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="usernameLineEdit"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="username_error">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
     </widget>
     <widget class="QWidget" name="serverTab">
@@ -339,7 +320,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>302</width>
+     <width>353</width>
      <height>22</height>
     </rect>
    </property>
