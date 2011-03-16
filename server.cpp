@@ -130,8 +130,6 @@ void Server::run() {
 
                 switch (readMsg(currentClientSocket, chatMsg)) {
                     case kSuccess:
-                        qDebug() << chatMsg.data;
-
                         switch (chatMsg.type) {
                             case kChat:
 
@@ -143,8 +141,6 @@ void Server::run() {
                                     if (client[j] == currentClientSocket) {
                                         continue;
                                     }
-
-                                    qDebug() << "sending";
                                     sendMsg(client[j], chatMsg);
                                 }
 

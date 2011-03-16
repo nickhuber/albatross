@@ -20,6 +20,7 @@
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
+
     setClientGuiVisible(true);
     setWindowIcon(QIcon(":/albatross.png"));
     setWindowTitle(tr("Albatross"));
@@ -62,6 +63,7 @@ void MainWindow::slot_stop() {
     disconnect(server_, SIGNAL(signal_clientConnected(QString)));
     disconnect(server_, SIGNAL(signal_clientDisconnect(QString)));
     delete server_;
+    ui->clientList->clear();
     ui->startPushButton->setText("Start");
     ui->tabWidget->setTabEnabled(0, true);
     ui->startPushButton->disconnect();
