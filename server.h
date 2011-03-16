@@ -23,7 +23,7 @@ protected:
 
 signals:
     void signal_clientConnected(const QString& address);
-    void signal_clientDisconnect(const int index);
+    void signal_clientDisconnect(const QString& address);
 
 };
 

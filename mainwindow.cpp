@@ -51,7 +51,7 @@ void MainWindow::slot_start() {
     }
 
     connect(server_, SIGNAL(signal_clientConnected(QString)), SLOT(slot_connectedClient(QString)));
-    connect(server_, SIGNAL(signal_clientDisconnect(int)), SLOT(slot_disconnectedClient(int)));
+    connect(server_, SIGNAL(signal_clientDisconnect(QString)), SLOT(slot_disconnectedClient(QString)));
     ui->startPushButton->setText("Stop");
     ui->tabWidget->setTabEnabled(0, false);
     ui->startPushButton->disconnect();
@@ -60,7 +60,7 @@ void MainWindow::slot_start() {
 
 void MainWindow::slot_stop() {
     disconnect(server_, SIGNAL(signal_clientConnected(QString)));
-    disconnect(server_, SIGNAL(signal_clientDisconnect(int)));
+    disconnect(server_, SIGNAL(signal_clientDisconnect(QString)));
     delete server_;
     ui->startPushButton->setText("Start");
     ui->tabWidget->setTabEnabled(0, true);
@@ -158,8 +158,9 @@ void MainWindow::slot_connectedClient(const QString &address) {
     ui->clientList->addItem(address);
 }
 
-void MainWindow::slot_disconnectedClient(const int index) {
-    ui->clientList->takeItem(index);
+void MainWindow::slot_disconnectedClient(const QString& address) {
+    qDebug() << address;
+    qDeleteAll(ui->clientList->findItems(address, Qt::MatchExactly));
 }
 
 void MainWindow::setClientGuiVisible(bool visible) {

@@ -153,7 +153,9 @@ void Server::run() {
 
                         break;
                     case kDisconnect:
-                        emit signal_clientDisconnect(i);
+                        client_len = sizeof(client_addr);
+                        getpeername(client[i], (sockaddr*) &client_addr, &client_len);
+                        emit signal_clientDisconnect(QString(inet_ntoa(client_addr.sin_addr)));
                         close(currentClientSocket);
                         FD_CLR(currentClientSocket, &allset);
                         client[i] = -1;

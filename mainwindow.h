@@ -94,10 +94,10 @@ public slots:
     /**
       Slot for when a client disconnects from the server, to remove from the list.
 
-      @param index The index of the client
+      @param address The IP of the disconnected client
       @author Nick Huber
       */
-    void slot_disconnectedClient(const int index);
+    void slot_disconnectedClient(const QString& address);
 };
 
 #endif // MAINWINDOW_H
