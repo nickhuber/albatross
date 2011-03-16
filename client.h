@@ -17,6 +17,13 @@ typedef unsigned int in_addr_t;
 
 #include "chatmsg.h"
 
+
+/**
+  The client connects to a server, and through it sends and receives messages
+  to other clients connected to he same server.
+
+  @author Nick Huber
+  */
 class Client : public QThread {
     Q_OBJECT
 
@@ -24,6 +31,7 @@ public:
     /**
       Constructor for the client. Opens a connection.
 
+      @throws QString
       @param ip The IPv4 address.
       @param port The port number.
       @param username The client's username.
@@ -52,12 +60,20 @@ signals:
       @author Nick Huber
       */
     void signal_messageReceived(const QString& username, const QString& message) const;
+
+    /**
+      Signal for the client disconnecting.
+
+      @author Nick Huber
+      */
     void signal_disconnected();
 
 protected:
     /**
       The client thread method, receives any incoming data and signals the GUI
       to update when it does.
+
+      @author Nick Huber.
       */
     void run();
 };

@@ -9,17 +9,35 @@ namespace Ui {
 class MainWindow;
 }
 
+
+/**
+  The Main Window. Handles everything GUI related.
+
+  @author Nick Huber
+  */
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
 public:
+    /**
+      MainWindow constructor.
+
+      @param parent This widgets parent.
+      @author Nick Huber
+      */
     explicit MainWindow(QWidget* parent = 0);
+
+    /**
+      MainWindow destructor.
+
+      @author Nick Huber
+      */
     ~MainWindow();
 
 private:
-    Ui::MainWindow* ui;
-    Client* client_;
-    Server* server_;
+    Ui::MainWindow* ui; /**< all the ui components. */
+    Client* client_;    /**< The client. */
+    Server* server_;    /**< The server. */
 
     /**
       Hides or shows the client GUI components.
