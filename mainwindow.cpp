@@ -44,7 +44,7 @@ void MainWindow::slot_start() {
     }
 
     try {
-        server_ = new Server(port);
+        server_ = new Server(htons(port));
     } catch (const QString& e) {
         qDebug() << e;
         return;
@@ -91,7 +91,7 @@ void MainWindow::slot_connect() {
     }
 
     try {
-        client_ = new Client(ip, port, ui->usernameLineEdit->text());
+        client_ = new Client(ip, htons(port), ui->usernameLineEdit->text());
     } catch (const QString& e) {
         qDebug() << e;
         return;

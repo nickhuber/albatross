@@ -71,7 +71,7 @@ void Server::run() {
     sockaddr_in client_addr;
     fd_set rset, allset;
     maxfd	= socket_;	// initialize
-    maxIndex	= -1;		// index into client[] array
+    maxIndex	= -1;	// highest index of connections
 
     for (clientIndex = 0; clientIndex < FD_SETSIZE; clientIndex++) {
         client[clientIndex] = -1;             // -1 indicates available entry
