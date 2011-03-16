@@ -132,6 +132,9 @@ void Server::run() {
                     case kSuccess:
                         switch (chatMsg.type) {
                             case kChat:
+                                client_len = sizeof(client_addr);
+                                getpeername(client[i], (sockaddr*) &client_addr, &client_len);
+                                memcpy((void*) &chatMsg.address, (void*) &client_addr.sin_addr, sizeof(chatMsg.address));
 
                                 for (int j = 0; j <= maxIndex; j++) {
                                     if (client[j] == -1) {

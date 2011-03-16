@@ -5,6 +5,7 @@
   <ol>
     <li>size</li>
     <li>nameSize</li>
+    <li>IP Address</li>
     <li>username</li>
     <li>type</li>
     <li>data</li>
@@ -15,7 +16,16 @@
 #ifndef CHATMSG_H
 #define CHATMSG_H
 
+#ifndef _WIN32
+#include <arpa/inet.h>
+#endif
+
+#ifdef _WIN32
+#include <winsock2.h>
+#endif
+
 #include <sys/types.h>
+
 #include <QString>
 
 /**
@@ -33,6 +43,7 @@ enum MsgType {
 struct ChatMsg {
     int size;             /**< The size of this message's data. */
     int nameSize;         /**< The size of this user's username.*/
+    in_addr address;      /**< The sending client's IP address. */
     const char* username; /**< The user's username. */
     MsgType type;         /**< The type of this message. */
     const char* data;     /**< The data of this message. */

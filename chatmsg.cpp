@@ -37,7 +37,9 @@ return_readMsg readMsg(int socket, ChatMsg& chatMsg) {
 
     chatMsg.size = (int) *buffer_head;
     delete[] buffer_head;
+
     // read the nameSize
+
     bytes_to_read = sizeof(chatMsg.nameSize);
     buffer = new char[bytes_to_read];
     buffer_head = buffer;
@@ -54,7 +56,28 @@ return_readMsg readMsg(int socket, ChatMsg& chatMsg) {
 
     chatMsg.nameSize = (int) *buffer_head;
     delete[] buffer_head;
+
+    // read the address
+
+    bytes_to_read = sizeof(chatMsg.address);
+    buffer = new char[bytes_to_read];
+    buffer_head = buffer;
+
+    while ((n = recv(socket, buffer, bytes_to_read, 0)) > 0) {
+        buffer += n;
+        bytes_to_read -= n;
+    }
+
+    if (n == -1) {
+        qDebug() << "error reading:" << strerror(errno);
+        return kError;
+    }
+
+    memcpy((void*) &chatMsg.address, (void*) buffer_head, sizeof(chatMsg.address));
+    delete[] buffer_head;
+
     // read the username
+
     bytes_to_read = chatMsg.nameSize;
     buffer = new char[bytes_to_read];
     buffer_head = buffer;
@@ -70,7 +93,9 @@ return_readMsg readMsg(int socket, ChatMsg& chatMsg) {
     }
 
     chatMsg.username = buffer_head;
+
     // read the message type
+
     bytes_to_read = sizeof(chatMsg.type);
     buffer = new char[bytes_to_read];
     buffer_head = buffer;
@@ -87,7 +112,9 @@ return_readMsg readMsg(int socket, ChatMsg& chatMsg) {
 
     chatMsg.type = (MsgType) *buffer_head;
     delete[] buffer_head;
+
     // read the message data
+
     bytes_to_read = chatMsg.size;
     buffer = new char[bytes_to_read];
     buffer_head = buffer;
@@ -126,6 +153,11 @@ bool sendMsg(int socket, const ChatMsg& chatMsg) {
         return false;
     }
 
+    if (send(socket, (void*) &chatMsg.address, sizeof(chatMsg.address), 0) == -1) {
+        qDebug() << "error sending:" << strerror(errno);
+        return false;
+    }
+
     if (send(socket, (void*) chatMsg.username, chatMsg.nameSize, 0) == -1) {
         qDebug() << "error sending:" << strerror(errno);
         return false;
@@ -153,6 +185,11 @@ bool sendMsg(int socket, const ChatMsg& chatMsg) {
     }
 
     if (send(socket, (const char*) &chatMsg.nameSize, sizeof(chatMsg.nameSize), 0) == -1) {
+        qDebug() << "error sending:" << strerror(errno);
+        return false;
+    }
+
+    if (send(socket, (const char*) &chatMsg.address, sizeof(chatMsg.address), 0) == -1) {
         qDebug() << "error sending:" << strerror(errno);
         return false;
     }

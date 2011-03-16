@@ -96,19 +96,21 @@ public slots:
       Slot for displaying a message. Updates the text window with the message.
 
       @param username The sender's username.
+      @param address The sending client's address.
       @param message The sender's message.
       @author Nick Huber
       */
-    void slot_displayMessage(const QString& username, const QString& message);
+    void slot_displayMessage(const QString& username, const QString& address, const QString& message);
 
     /**
       Slot for writing a message to a file. appends into log.txt in the current directory.
 
       @param username The sender's username.
+      @param address The sending client's address.
       @param message The sender's message.
       @author Nick Huber
       */
-    void slot_saveToFile(const QString& username, const QString& message);
+    void slot_saveToFile(const QString& username, const QString& address, const QString& message);
 
     /**
       Slot for when a client is connected to update the server list.

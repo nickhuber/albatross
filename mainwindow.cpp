@@ -116,10 +116,10 @@ void MainWindow::slot_connect() {
 
     // if the checkbox is set, save to a file.
     if (ui->saveSessionCheckBox->checkState() == Qt::Checked) {
-        connect(client_, SIGNAL(signal_messageReceived(QString, QString)), SLOT(slot_saveToFile(QString, QString)));
+        connect(client_, SIGNAL(signal_messageReceived(QString, QString, QString)), SLOT(slot_saveToFile(QString, QString, QString)));
     }
     // when a message is received, print to the output
-    connect(client_, SIGNAL(signal_messageReceived(QString, QString)), SLOT(slot_displayMessage(QString, QString)));
+    connect(client_, SIGNAL(signal_messageReceived(QString, QString, QString)), SLOT(slot_displayMessage(QString, QString, QString)));
 
     // if the server shuts down, disconnect the client
     connect(client_, SIGNAL(signal_disconnected()), SLOT(slot_disconnect()));
@@ -133,7 +133,7 @@ void MainWindow::slot_connect() {
 
 void MainWindow::slot_disconnect() {
 
-    disconnect(client_, SIGNAL(signal_messageReceived(QString, QString)));
+    disconnect(client_, SIGNAL(signal_messageReceived(QString, QString, QString)));
     disconnect(client_, SIGNAL(signal_disconnected()));
     delete client_;
     setClientGuiVisible(true);
@@ -149,7 +149,7 @@ void MainWindow::slot_send() {
     client_->sendMsg(kChat, message.size() + 1, message.toStdString().c_str());
 }
 
-void MainWindow::slot_displayMessage(const QString& username, const QString& message) {
+void MainWindow::slot_displayMessage(const QString& username, const QString& address, const QString& message) {
     int sum = 0;
 
     // generate a number from the username
@@ -161,14 +161,14 @@ void MainWindow::slot_displayMessage(const QString& username, const QString& mes
     // 3 and 7 are numbers just to make sure the colour isnt always gray
     QColor colour(sum % 255, sum * 3 % 255, sum * 7 % 255);
 
-    ui->chatMessagesText->append("<span style='color:" + colour.name() + "'>" + username + "</span>" + ": " + message);
+    ui->chatMessagesText->append("<span style='color:" + colour.name() + "'>" + username + "</span>" + "(" + address + ")" + ": " + message);
 }
 
-void MainWindow::slot_saveToFile(const QString& username, const QString& message) {
+void MainWindow::slot_saveToFile(const QString& username, const QString& address, const QString& message) {
     QFile file("log.txt");
     file.open(QFile::WriteOnly | QFile::Append);
     QTextStream stream(&file);
-    stream << username << ": " << message << "\r\n";
+    stream << username << "(" << address << ")" << ": " << message << "\r\n";
 }
 
 void MainWindow::slot_connectedClient(const QString &address) {
@@ -181,12 +181,12 @@ void MainWindow::slot_disconnectedClient(const QString& address) {
 
 void MainWindow::setClientGuiVisible(bool visible) {
 
-    ui->saveSessionLabel->setVisible(visible);
-    ui->saveSessionCheckBox->setVisible(visible);
-    ui->serverIPLabel->setVisible(visible);
-    ui->serverIPLineEdit->setVisible(visible);
-    ui->portLabel->setVisible(visible);
-    ui->portLineEdit->setVisible(visible);
+    ui->saveSessionLabel->setEnabled(visible);
+    ui->saveSessionCheckBox->setEnabled(visible);
+    ui->serverIPLabel->setEnabled(visible);
+    ui->serverIPLineEdit->setEnabled(visible);
+    ui->portLabel->setEnabled(visible);
+    ui->portLineEdit->setEnabled(visible);
     ui->usernameLineEdit->setEnabled(visible);
     ui->chatMessagesText->setVisible(!visible);
     ui->sendLineEdit->setVisible(!visible);

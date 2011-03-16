@@ -66,10 +66,11 @@ signals:
       Signal for the client received a message.
 
       @param username The username to show.
+      @param address The sending client's IP address.
       @param message The message to show.
       @author Nick Huber
       */
-    void signal_messageReceived(const QString& username, const QString& message) const;
+    void signal_messageReceived(const QString& username, const QString& address, const QString& message) const;
 
     /**
       Signal for the client disconnecting.

@@ -6,6 +6,7 @@
 #ifdef _WIN32
 #include <winsock2.h>
 #define close closesocket
+typedef int socklen_t;
 #endif
 
 #include <stdint.h>
@@ -50,15 +51,17 @@ Client::~Client() {
 }
 
 void Client::sendMsg(MsgType type, const int length, const char* data) const {
+
     ChatMsg chatMsg;
     chatMsg.size = length;
     chatMsg.nameSize = username_.size() + 1;
+    memset((void*) &chatMsg.address, 0, sizeof(chatMsg.address));
     chatMsg.username = username_.toStdString().c_str();
     chatMsg.type = type;
     chatMsg.data = data;
     // the chatmsg.cpp sendMsg. TODO: move to a namespace
     ::sendMsg(socket_, chatMsg);
-    emit signal_messageReceived(username_, chatMsg.data);
+    emit signal_messageReceived(username_, "self", chatMsg.data);
 }
 
 void Client::run() {
@@ -67,7 +70,7 @@ void Client::run() {
     while (running_) {
         switch (readMsg(socket_, chatMsg)) {
             case kSuccess:
-                emit signal_messageReceived(chatMsg.username, chatMsg.data);
+                emit signal_messageReceived(chatMsg.username, QString(inet_ntoa(chatMsg.address)), chatMsg.data);
                 break;
             case kDisconnect:
                 close(socket_);
