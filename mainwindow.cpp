@@ -159,7 +159,6 @@ void MainWindow::slot_connectedClient(const QString &address) {
 }
 
 void MainWindow::slot_disconnectedClient(const QString& address) {
-    qDebug() << address;
     qDeleteAll(ui->clientList->findItems(address, Qt::MatchExactly));
 }
 
