@@ -23,6 +23,11 @@ return_readMsg readMsg(int socket, ChatMsg& chatMsg) {
     while ((n = recv(socket, buffer, bytes_to_read, 0)) > 0) {
         buffer += n;
         bytes_to_read -= n;
+
+        if (bytes_to_read == 0) {
+            break;
+        }
+
     }
 
     if (n == -1) {
@@ -47,6 +52,10 @@ return_readMsg readMsg(int socket, ChatMsg& chatMsg) {
     while ((n = recv(socket, buffer, bytes_to_read, 0)) > 0) {
         buffer += n;
         bytes_to_read -= n;
+
+        if (bytes_to_read == 0) {
+            break;
+        }
     }
 
     if (n == -1) {
@@ -66,6 +75,10 @@ return_readMsg readMsg(int socket, ChatMsg& chatMsg) {
     while ((n = recv(socket, buffer, bytes_to_read, 0)) > 0) {
         buffer += n;
         bytes_to_read -= n;
+
+        if (bytes_to_read == 0) {
+            break;
+        }
     }
 
     if (n == -1) {
@@ -85,6 +98,10 @@ return_readMsg readMsg(int socket, ChatMsg& chatMsg) {
     while ((n = recv(socket, buffer, bytes_to_read, 0)) > 0) {
         buffer += n;
         bytes_to_read -= n;
+
+        if (bytes_to_read == 0) {
+            break;
+        }
     }
 
     if (n == -1) {
@@ -103,6 +120,10 @@ return_readMsg readMsg(int socket, ChatMsg& chatMsg) {
     while ((n = recv(socket, buffer, bytes_to_read, 0)) > 0) {
         buffer += n;
         bytes_to_read -= n;
+
+        if (bytes_to_read == 0) {
+            break;
+        }
     }
 
     if (n == -1) {
@@ -122,13 +143,10 @@ return_readMsg readMsg(int socket, ChatMsg& chatMsg) {
     while ((n = recv(socket, buffer, bytes_to_read, 0)) > 0) {
         buffer += n;
         bytes_to_read -= n;
-#ifdef _WIN32
 
         if (bytes_to_read == 0) {
             break;
         }
-
-#endif
     }
 
     if (n == -1) {
