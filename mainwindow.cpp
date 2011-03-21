@@ -188,6 +188,7 @@ void MainWindow::setClientGuiVisible(bool visible) {
     ui->portLabel->setEnabled(visible);
     ui->portLineEdit->setEnabled(visible);
     ui->usernameLineEdit->setEnabled(visible);
+    ui->usernameLabel->setEnabled(visible);
     ui->chatMessagesText->setVisible(!visible);
     ui->sendLineEdit->setVisible(!visible);
     ui->sendPushButton->setVisible(!visible);

@@ -124,7 +124,6 @@ return_readMsg readMsg(int socket, ChatMsg& chatMsg) {
         bytes_to_read -= n;
 #ifdef _WIN32
 
-        // since windows doesn't recv async, this gets it past this point.
         if (bytes_to_read == 0) {
             break;
         }

@@ -1,4 +1,5 @@
 #include <QtGui/QApplication>
+#include <QThreadPool>
 
 #ifdef _WIN32
 #include <winsock2.h>
@@ -17,6 +18,7 @@ int main(int argc, char* argv[]) {
 
 #endif
     QApplication a(argc, argv);
+    QThreadPool::globalInstance()->setMaxThreadCount(8);
     MainWindow w;
     w.show();
     int retCode = a.exec();
