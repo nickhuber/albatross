@@ -61,11 +61,21 @@ Server::~Server() {
     running_ = false;
     shutdown(socket_, SHUT_RDWR);
 
+#ifdef _WIN32
+    //windows likes to have the socket closed beforehand...
+    // ensure the socket is closed.
+    close(socket_);
+#endif
+
     // wait for the thread to finish.
     QThread::wait();
 
+#ifndef _WIN32
+    // ...which causes issues for *nix
     // ensure the socket is closed.
     close(socket_);
+#endif
+
 }
 
 void Server::run() {
