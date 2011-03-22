@@ -36,7 +36,7 @@ return_readMsg readMsg(int socket, ChatMsg& chatMsg) {
     }
 
     // extra check on first read, if we read nothing then it was a disconnect
-    if (n == 0 && bytes_to_read != 0) {
+    if (n == 0) {
         return kDisconnect;
     }
 

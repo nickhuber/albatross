@@ -7,6 +7,7 @@
 #define close closesocket
 #include <winsock2.h>
 typedef int socklen_t;
+#define SHUT_RDWR 2
 #endif
 
 // debugging
@@ -56,12 +57,15 @@ Server::Server(uint16_t port)
 }
 
 Server::~Server() {
-
-    close(socket_);
+    // prepare thread for close by aborting socket operations and stopping the loop from repeating.
     running_ = false;
+    shutdown(socket_, SHUT_RDWR);
 
-    // Wait for the thread to finish.
-    wait();
+    // wait for the thread to finish.
+    QThread::wait();
+
+    // ensure the socket is closed.
+    close(socket_);
 }
 
 void Server::run() {
@@ -83,6 +87,11 @@ void Server::run() {
     while (running_) {
         rset = allset;               // structure assignment
         numReady = select(maxfd + 1, &rset, NULL, NULL, NULL);
+
+        // check if return was from server shutting down and return if it was.
+        if (running_ == false) {
+            return;
+        }
 
         if (FD_ISSET(socket_, &rset)) {
             client_len = sizeof(client_addr);

@@ -7,12 +7,14 @@
 #include <winsock2.h>
 #define close closesocket
 typedef int socklen_t;
+#define SHUT_RDWR 2
 #endif
 
 #include <stdint.h>
 #include <QString>
 
 // debugging
+#include <QDebug>
 #include <errno.h>
 #include <string.h>
 
@@ -43,11 +45,15 @@ Client::Client(in_addr_t ip, uint16_t port, const QString& username)
 }
 
 Client::~Client() {
-    close(socket_);
+    // prepare thread for close by aborting socket operations and stopping the loop from repeating.
     running_ = false;
+    shutdown(socket_, SHUT_RDWR);
 
     // wait for the thread to finish.
-    wait();
+    QThread::wait();
+
+    // ensure the socket is closed.
+    close(socket_);
 }
 
 void Client::sendMsg(MsgType type, const int length, const char* data) const {
@@ -74,8 +80,11 @@ void Client::run() {
                 break;
             case kDisconnect:
                 close(socket_);
-                running_ = false;
-                emit signal_disconnected();
+                // if the thread is still runnning then this was a message from the server to disconnect.
+                if (running_) {
+                    running_ = false;
+                    emit signal_disconnected();
+                }
                 break;
             case kError:
                 break;
