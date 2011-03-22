@@ -61,13 +61,11 @@ Server::~Server() {
     running_ = false;
     shutdown(socket_, SHUT_RDWR);
 
-    // ensure the socket is closed.
-    close(socket_);
-
     // wait for the thread to finish.
     QThread::wait();
 
-
+    // ensure the socket is closed.
+    close(socket_);
 }
 
 void Server::run() {
@@ -97,6 +95,7 @@ void Server::run() {
                 shutdown(client[i], SHUT_RDWR);
                 close(client[i]);
             }
+            return;
         }
 
         if (FD_ISSET(socket_, &rset)) {
