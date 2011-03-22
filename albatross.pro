@@ -8,6 +8,7 @@ QT       += core gui
 
 TARGET = albatross
 TEMPLATE = app
+CONFIG += release
 
 # compilation output directories
 
@@ -46,5 +47,5 @@ RESOURCES += icon.qrc
 # extra windows required libaries (assuming mingw)
 
 win32 {
-    LIBS += -lwsock32
+    LIBS += -lws2_32
 }

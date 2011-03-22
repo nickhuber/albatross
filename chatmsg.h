@@ -39,6 +39,7 @@ enum MsgType {
 /**
   Structure about each message going across the alabtross protocol.
   @author Nick Huber
+  @author Dean Morin
   */
 struct ChatMsg {
     int size;             /**< The size of this message's data. */
@@ -65,6 +66,7 @@ enum return_readMsg {
   @param chatMsg The chatMsg to store the results into.
   @return The result of the read operation as defined in return_readMsg.
   @author Nick Huber
+  @author Dean Morin
   */
 return_readMsg readMsg(int socket, ChatMsg& chatMsg);
 

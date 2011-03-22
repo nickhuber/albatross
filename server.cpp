@@ -61,11 +61,13 @@ Server::~Server() {
     running_ = false;
     shutdown(socket_, SHUT_RDWR);
 
+    // ensure the socket is closed.
+    close(socket_);
+
     // wait for the thread to finish.
     QThread::wait();
 
-    // ensure the socket is closed.
-    close(socket_);
+
 }
 
 void Server::run() {
@@ -88,9 +90,13 @@ void Server::run() {
         rset = allset;               // structure assignment
         numReady = select(maxfd + 1, &rset, NULL, NULL, NULL);
 
-        // check if return was from server shutting down and return if it was.
+        // check if return was from server shutting down and close all current
+        // connections and return if it was.
         if (running_ == false) {
-            return;
+            for (int i = 0; i <= maxIndex; i++) {
+                shutdown(client[i], SHUT_RDWR);
+                close(client[i]);
+            }
         }
 
         if (FD_ISSET(socket_, &rset)) {
