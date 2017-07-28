@@ -18,6 +18,8 @@ typedef int socklen_t;
 #include <errno.h>
 #include <string.h>
 
+#include <unistd.h>
+
 #include "client.h"
 #include "chatmsg.h"
 
